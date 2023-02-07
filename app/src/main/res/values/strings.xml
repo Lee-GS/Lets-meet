@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Let\'s meet</string>
+    <string name="title_activity_sigin_in_ui">SiginInUI</string>
+    <string name="title_activity_sign_up_ui">SignUpUi</string>
+</resources>
