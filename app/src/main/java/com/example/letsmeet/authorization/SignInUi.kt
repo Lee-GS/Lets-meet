@@ -3,13 +3,16 @@ package com.example.letsmeet.authorization
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.Absolute.Center
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.letsmeet.authorization.ui.theme.LetsMeetTheme
 
 class SignInUi : ComponentActivity() {
@@ -17,27 +20,46 @@ class SignInUi : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LetsMeetTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                getIDPW(modifier = Modifier.padding(8.dp))
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun getIDPW(modifier: Modifier) {
+
+    Column(
+        Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        TextField(value = "",
+            onValueChange = {},
+            placeholder = { Text(text = "ID") },
+            modifier = modifier
+                .fillMaxWidth()
+        )
+        TextField(value = "",
+            onValueChange = {},
+            placeholder = { Text(text = "PW") },
+            modifier = modifier
+                .fillMaxWidth()
+
+        )
+        Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
+            Text(text = "로그인")
+        }
+        Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
+            Text(text = "회원가입")
+        }
+
+    }
 }
 
-@Preview(showBackground = true)
+
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun DefaultPreview() {
-    LetsMeetTheme {
-        Greeting("Android")
-    }
+fun getIdPreview() {
+    getIDPW(modifier = Modifier.padding(20.dp))
 }
