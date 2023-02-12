@@ -20,14 +20,14 @@ class SignInUi : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LetsMeetTheme {
-                getIDPW(modifier = Modifier.padding(8.dp))
+                signIn(modifier = Modifier.padding(8.dp))
             }
         }
     }
 }
 
 @Composable
-fun getIDPW(modifier: Modifier) {
+fun signIn(modifier: Modifier) {
 
     Column(
         Modifier.fillMaxSize(),
@@ -36,7 +36,7 @@ fun getIDPW(modifier: Modifier) {
     ) {
         TextField(value = "",
             onValueChange = {},
-            placeholder = { Text(text = "ID") },
+            placeholder = { Text(text = "Email") },
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -53,13 +53,12 @@ fun getIDPW(modifier: Modifier) {
         Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입")
         }
-
     }
 }
 
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun getIdPreview() {
-    getIDPW(modifier = Modifier.padding(20.dp))
+fun signInPreview() {
+    signIn(modifier = Modifier.padding(20.dp))
 }
