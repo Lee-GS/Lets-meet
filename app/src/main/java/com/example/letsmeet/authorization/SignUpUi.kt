@@ -65,6 +65,9 @@ fun signUp(modifier: Modifier) {
 
     }
 }
+fun checkPW(pw: String, pw_check: String) : Boolean {
+    return pw == pw_check
+}
 
 
 
