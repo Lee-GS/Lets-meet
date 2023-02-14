@@ -33,23 +33,40 @@ fun signUp(modifier: Modifier) {
     ) {
         TextField(value = "",
             onValueChange = {},
-            placeholder = { Text(text = "Email") },
+            label = { Text("이름") },
             modifier = modifier
                 .fillMaxWidth()
         )
         TextField(value = "",
             onValueChange = {},
-            placeholder = { Text(text = "PW") },
+            label = { Text("이메일") },
             modifier = modifier
                 .fillMaxWidth()
 
         )
+        TextField(value = "",
+            onValueChange = {},
+            label = { Text("비밀번호") },
+            modifier = modifier
+                .fillMaxWidth()
+
+        )
+        TextField(value = "",
+            onValueChange = {},
+            label = { Text("비밀먼호 확인") },
+            modifier = modifier
+                .fillMaxWidth()
+
+        )
+
         Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
         }
 
     }
 }
+
+
 
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
