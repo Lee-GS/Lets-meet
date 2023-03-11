@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.ui.theme.LetsMeetTheme
 import java.net.PasswordAuthentication
 
@@ -29,6 +30,8 @@ class SignInUi : ComponentActivity() {
         setContent {
             LetsMeetTheme {
                 signIn(modifier = Modifier.padding(8.dp))
+                val navController = rememberNavController()
+
             }
         }
     }
