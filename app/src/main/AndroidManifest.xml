@@ -12,14 +12,14 @@
         android:theme="@style/Theme.LetsMeet"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpUi"
+            android:name=".authorization.SignUpUi"
             android:exported="false"
             android:label="@string/title_activity_sign_up_ui"
             android:theme="@style/Theme.LetsMeet" />
         <activity
-            android:name=".SiginInUI"
+            android:name=".authorization.SignInUi"
             android:exported="false"
-            android:label="@string/title_activity_sigin_in_ui"
+            android:label="@string/title_activity_sign_in_ui"
             android:theme="@style/Theme.LetsMeet" />
         <activity
             android:name=".MainActivity"

@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.letsmeet.authorization.getIDPW
+import com.example.letsmeet.authorization.signIn
 import com.example.letsmeet.ui.theme.LetsMeetTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LetsMeetTheme {
-                getIDPW(
+                signIn(
                     modifier = Modifier.padding(20.dp)
                 )
             }

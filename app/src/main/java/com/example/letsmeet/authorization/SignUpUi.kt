@@ -15,21 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
 
-class SignUpUi : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LetsMeetTheme {
-                // A surface container using the 'background' color from the theme
-            }
-        }
-    }
-}
-
 @Composable
-fun signUp(modifier: Modifier) {
+fun signUp(modifier: Modifier, navController: NavController) {
     var email = rememberSaveable{
         mutableStateOf("")
     }
@@ -96,5 +87,5 @@ fun checkPW(pw: String, pw_check: String) : Boolean {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun signUpPreview() {
-    signUp(modifier = Modifier.padding(20.dp))
+    signUp(modifier = Modifier.padding(20.dp), navController = rememberNavController())
 }
