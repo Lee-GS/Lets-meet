@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.ui.theme.LetsMeetTheme
 
 @Composable
@@ -47,10 +48,13 @@ fun signIn(modifier: Modifier,navController: NavController) {
                 .fillMaxWidth()
 
         )
-        Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
+        Button(onClick = { /*TODO*/ },
+            modifier = modifier.fillMaxWidth()) {
             Text(text = "로그인")
         }
-        Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
+        Button(onClick = { navController.navigate(route = Screen.SignUpScreen.route)},
+            modifier = modifier.fillMaxWidth()
+        ) {
             Text(text = "회원가입")
         }
     }

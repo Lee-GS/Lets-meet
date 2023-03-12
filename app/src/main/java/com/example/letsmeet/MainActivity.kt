@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.signIn
 import com.example.letsmeet.ui.theme.LetsMeetTheme
 
@@ -21,9 +23,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LetsMeetTheme {
-                signIn(
-                    modifier = Modifier.padding(20.dp)
-                )
+                val navController : NavHostController = rememberNavController()
+                Navigation(navController = navController)
             }
         }
     }
