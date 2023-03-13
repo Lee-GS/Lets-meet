@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -25,13 +27,13 @@ fun signUp(modifier: Modifier, navController: NavController) {
         mutableStateOf("")
     }
     var pw = rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("1")
     }
     var name = rememberSaveable {
         mutableStateOf("")
     }
     var pw_check = rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("1")
     }
 
     Column(
@@ -70,15 +72,19 @@ fun signUp(modifier: Modifier, navController: NavController) {
                 .fillMaxWidth()
 
         )
+        if(pw.value == pw_check.value && pw.value != "" && pw_check.value != ""){
+            Text(text = "비밀번호가 일치합니다", color = Color.Blue)
+        }
+        else if(pw.value != pw_check.value && pw.value != "" && pw_check.value != ""){
+            Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
+        }
 
         Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
         }
 
     }
-}
-fun checkPW(pw: String, pw_check: String) : Boolean {
-    return pw == pw_check
+
 }
 
 
