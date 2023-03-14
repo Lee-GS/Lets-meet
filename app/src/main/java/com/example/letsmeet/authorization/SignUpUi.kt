@@ -1,6 +1,7 @@
 package com.example.letsmeet.authorization
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
 
 @Composable
@@ -27,13 +29,13 @@ fun signUp(modifier: Modifier, navController: NavController) {
         mutableStateOf("")
     }
     var pw = rememberSaveable {
-        mutableStateOf("1")
+        mutableStateOf("")
     }
     var name = rememberSaveable {
         mutableStateOf("")
     }
     var pw_check = rememberSaveable {
-        mutableStateOf("1")
+        mutableStateOf("")
     }
 
     Column(
@@ -47,13 +49,14 @@ fun signUp(modifier: Modifier, navController: NavController) {
             modifier = modifier
                 .fillMaxWidth()
         )
+
         TextField(value = email.value,
             onValueChange = {emailValue -> email.value = emailValue},
             label = { Text("이메일") },
             modifier = modifier
                 .fillMaxWidth()
-
         )
+
         TextField(value = pw.value,
             onValueChange = {pwValue -> pw.value = pwValue},
             label = { Text("비밀번호") },
@@ -61,8 +64,8 @@ fun signUp(modifier: Modifier, navController: NavController) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = modifier
                 .fillMaxWidth()
-
         )
+
         TextField(value = pw_check.value,
             onValueChange = {pw_checkValue -> pw_check.value = pw_checkValue},
             label = { Text("비밀먼호 확인") },
@@ -70,8 +73,8 @@ fun signUp(modifier: Modifier, navController: NavController) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = modifier
                 .fillMaxWidth()
-
         )
+
         if(pw.value == pw_check.value && pw.value != "" && pw_check.value != ""){
             Text(text = "비밀번호가 일치합니다", color = Color.Blue)
         }
@@ -79,11 +82,32 @@ fun signUp(modifier: Modifier, navController: NavController) {
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
 
-        Button(onClick = { /*TODO*/ }, modifier = modifier.fillMaxWidth()) {
+        Button(onClick = { if (pw == pw_check){
+            register(email,pw)
+        } }, modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
         }
 
     }
+
+}
+
+fun register(id : MutableState<String>, password : MutableState<String> ){
+    auth.createUserWithEmailAndPassword(id.toString(),password.toString())
+        .addOnCompleteListener{task ->
+            if(task.isSuccessful){
+                auth.currentUser?.sendEmailVerification()
+                    ?.addOnCompleteListener { sendTask ->
+                        if(sendTask.isSuccessful){
+
+                        }
+                        else{
+                            Log.e("[ERROR]","error",task.exception)
+                        }
+                    }
+            }
+
+        }
 
 }
 
