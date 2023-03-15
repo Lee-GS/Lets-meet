@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.authorization.registerDialog
 import com.example.letsmeet.authorization.signIn
 import com.example.letsmeet.authorization.signUp
 
@@ -23,6 +24,9 @@ fun Navigation(navController: NavController){
         }
         composable(route = Screen.SignUpScreen.route){
             signUp(modifier = Modifier.padding(20.dp), navController = navController)
+        }
+        composable(route = Screen.dialogScreen.route){
+            registerDialog(navController = navController)
         }
     }
 }
