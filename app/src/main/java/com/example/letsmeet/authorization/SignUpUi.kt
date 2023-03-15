@@ -1,5 +1,6 @@
 package com.example.letsmeet.authorization
 
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -10,18 +11,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun signUp(modifier: Modifier, navController: NavController) {
@@ -82,9 +91,9 @@ fun signUp(modifier: Modifier, navController: NavController) {
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
 
-        Button(onClick = { if (pw == pw_check){
+        Button(onClick = { navController.navigate(route = Screen.dialogScreen.route)/*if (pw == pw_check){
             register(email,pw)
-        } }, modifier = modifier.fillMaxWidth()) {
+        }*/ }, modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
         }
 
@@ -114,8 +123,12 @@ fun register(id : MutableState<String>, password : MutableState<String> ){
 
 
 
+
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun signUpPreview() {
     signUp(modifier = Modifier.padding(20.dp), navController = rememberNavController())
 }
+
+
+
