@@ -1,9 +1,11 @@
 package com.example.letsmeet.authorization
 
+import androidx.multidex.MultiDexApplication
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class AuthfFireBase {
+class AuthFireBase : MultiDexApplication() {
     companion object{
         lateinit var auth: FirebaseAuth
         var email: String? = null
@@ -17,4 +19,10 @@ class AuthfFireBase {
             }
         }
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        auth = Firebase.auth
+    }
+
 }

@@ -1,8 +1,11 @@
 package com.example.letsmeet.authorization
 
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -30,6 +33,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
@@ -91,33 +96,28 @@ fun signUp(modifier: Modifier, navController: NavController) {
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
 
-        Button(onClick = { navController.navigate(route = Screen.dialogScreen.route)/*if (pw == pw_check){
-            register(email,pw)
-        }*/ }, modifier = modifier.fillMaxWidth()) {
+        Button(
+            onClick = {
+            if (pw.value == pw_check.value){
+                register(email.value,pw.value,navController)
+                } },
+            modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
         }
-
     }
-
 }
 
-fun register(id : MutableState<String>, password : MutableState<String> ){
-    auth.createUserWithEmailAndPassword(id.toString(),password.toString())
+fun register(id : String, password : String, navController: NavController ){
+    auth.createUserWithEmailAndPassword(id,password)
         .addOnCompleteListener{task ->
             if(task.isSuccessful){
-                auth.currentUser?.sendEmailVerification()
-                    ?.addOnCompleteListener { sendTask ->
-                        if(sendTask.isSuccessful){
-
-                        }
-                        else{
-                            Log.e("[ERROR]","error",task.exception)
-                        }
-                    }
+                navController.navigate(Screen.dialogScreen.route)
+                Log.d(TAG,"SUCCESS")
             }
-
+            else{
+                Log.e("[ERROR]","error",task.exception)
+            }
         }
-
 }
 
 
