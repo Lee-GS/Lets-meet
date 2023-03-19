@@ -23,6 +23,7 @@ import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun signUp(modifier: Modifier, navController: NavController) {
+    val context = LocalContext.current
     var email = rememberSaveable{
         mutableStateOf("")
     }
@@ -99,7 +101,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
         Button(
             onClick = {
             if (pw.value == pw_check.value){
-                register(email.value,pw.value,navController)
+                register(email.value,pw.value,navController,context)
                 } },
             modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
@@ -107,14 +109,25 @@ fun signUp(modifier: Modifier, navController: NavController) {
     }
 }
 
-fun register(id : String, password : String, navController: NavController ){
+fun register(id : String, password : String, navController: NavController, context: Context ){
     auth.createUserWithEmailAndPassword(id,password)
         .addOnCompleteListener{task ->
             if(task.isSuccessful){
+                auth.currentUser?.sendEmailVerification()
+                    ?.addOnCompleteListener { sendtask ->
+                        if(sendtask.isSuccessful){
+                            Toast.makeText(context,"회원가입에 성공하였습니다." +
+                                    "전송된 이메일을 확인해 주세요!",Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            Toast.makeText(context,"메일 전송실패!",Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 navController.navigate(Screen.dialogScreen.route)
                 Log.d(TAG,"SUCCESS")
             }
             else{
+                Toast.makeText(context,"회원가입에 실패하였습니다.",Toast.LENGTH_SHORT).show()
                 Log.e("[ERROR]","error",task.exception)
             }
         }
