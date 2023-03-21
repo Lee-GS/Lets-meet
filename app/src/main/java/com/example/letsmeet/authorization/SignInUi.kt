@@ -56,7 +56,7 @@ fun signIn(modifier: Modifier,navController: NavController) {
                 .fillMaxWidth()
 
         )
-        Button(onClick = { if(email.value != "" && pw.value !=" ") login(email.value,pw.value,context) },
+        Button(onClick = { if(email.value != "" && pw.value !=" ") login(email.value,pw.value,context,navController) },
             modifier = modifier.fillMaxWidth()) {
             Text(text = "로그인")
         }
@@ -68,13 +68,14 @@ fun signIn(modifier: Modifier,navController: NavController) {
     }
 }
 
-fun login(email: String, password: String, context: Context){
+fun login(email: String, password: String, context: Context,navController: NavController){
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { it ->
             if(it.isSuccessful){
                 if (checkAuth()){
                     AuthFireBase.email=email
                     Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.MainScreen.route)
                 }else{
 
                 }
