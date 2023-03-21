@@ -25,8 +25,11 @@ fun Navigation(navController: NavController){
         composable(route = Screen.SignUpScreen.route){
             signUp(modifier = Modifier.padding(20.dp), navController = navController)
         }
-        composable(route = Screen.dialogScreen.route){
+        composable(route = Screen.DialogScreen.route){
             registerDialog(navController = navController)
+        }
+        composable(route = Screen.MainScreen.route){
+            MainUi(navController = navController)
         }
     }
 }
