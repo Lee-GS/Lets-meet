@@ -1,8 +1,12 @@
 package com.example.letsmeet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,10 +15,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.ui.theme.Purple40
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.sql.Time
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,18 +34,18 @@ fun MainUi(navController: NavController){
                 title = { Text(text = "USW") },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "menu")
+                        Icon(Icons.Default.Person, contentDescription = "Person")
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* Handle action icon click */ }) {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 }
             )
         }
-    ){innerPadding ->
-        TimeLine(Modifier.padding(innerPadding))
+    ){
+        
     }
 }
 
@@ -80,6 +87,33 @@ fun TimeLine(modifier: Modifier){
     }
 }
 
+@Composable
+fun PlanList(){
+    var date = rememberSaveable {
+        mutableStateOf("")
+    }
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.background(Purple40)
+        ) {
+        TextField(
+            value = date.value,
+            onValueChange = {dateValue -> date.value = dateValue},
+            placeholder = { Text(text = "ex) 2/28")},
+            modifier = Modifier.width(100.dp))
+        LazyColumn{
+            item {
+                TimeLine(modifier = Modifier)
+                TimeLine(modifier = Modifier)
+                TimeLine(modifier = Modifier)
+            }
+        }
+    }
+}
+
+
+
+
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
@@ -93,3 +127,8 @@ fun TimeLinePreview(){
     TimeLine(modifier = Modifier.padding(8.dp))
 }
 
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun PlanListPreview(){
+    PlanList()
+}
