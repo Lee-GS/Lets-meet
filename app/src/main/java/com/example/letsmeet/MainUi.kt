@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -45,8 +46,10 @@ fun MainUi(navController: NavController){
             )
         }
     ){
-        
+
     }
+
+
 }
 
 @Composable
@@ -87,25 +90,29 @@ fun TimeLine(modifier: Modifier){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanList(){
     var date = rememberSaveable {
         mutableStateOf("")
     }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.background(Purple40)
+    Card(modifier = Modifier.padding(8.dp) ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.background(Purple40)
+                .padding(8.dp)
         ) {
-        TextField(
-            value = date.value,
-            onValueChange = {dateValue -> date.value = dateValue},
-            placeholder = { Text(text = "ex) 2/28")},
-            modifier = Modifier.width(100.dp))
-        LazyColumn{
-            item {
-                TimeLine(modifier = Modifier)
-                TimeLine(modifier = Modifier)
-                TimeLine(modifier = Modifier)
+            TextField(
+                value = date.value,
+                onValueChange = {dateValue -> date.value = dateValue},
+                placeholder = { Text(text = "ex) 2/28")},
+                modifier = Modifier.width(100.dp))
+            LazyColumn{
+                item {
+                    TimeLine(modifier = Modifier)
+                    TimeLine(modifier = Modifier)
+                    TimeLine(modifier = Modifier)
+                }
             }
         }
     }
