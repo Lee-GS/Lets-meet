@@ -1,54 +1,63 @@
 package com.example.letsmeet
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.ui.theme.Pink40
 import com.example.letsmeet.ui.theme.Purple40
+import com.example.letsmeet.ui.theme.Purple80
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
-import java.sql.Time
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi(navController: NavController){
-    Scaffold(
-        modifier = Modifier,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = "USW") },
-                navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Person, contentDescription = "Person")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Handle action icon click */ }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
-                    }
+    Surface(color = Purple80) {
+        Scaffold(
+            topBar = { MyAppBar() },
+            content = {
+                innerPadding ->
+                LazyColumn(
+                    contentPadding = innerPadding,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally){
+                    items(100) {it ->  Text(text = "$it item") }
                 }
-            )
-        }
-    ){
-
+            }
+        )
     }
+}
 
+@Composable
+fun MyAppBar(){
+    CenterAlignedTopAppBar(
+        title = { Text(text = "USW") },
+        navigationIcon = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.Person, contentDescription = "Person")
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* Handle action icon click */ }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
+    )
 
 }
 
@@ -99,7 +108,8 @@ fun PlanList(){
     Card(modifier = Modifier.padding(8.dp) ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.background(Purple40)
+            modifier = Modifier
+                .background(Purple40)
                 .padding(8.dp)
         ) {
             TextField(
