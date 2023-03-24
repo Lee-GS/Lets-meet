@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -33,32 +34,41 @@ fun MainUi(navController: NavController){
             content = {
                 innerPadding ->
                 LazyColumn(
+                    Modifier.fillMaxWidth(),
                     contentPadding = innerPadding,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally){
-                    items(100) {it ->  Text(text = "$it item") }
+                    horizontalAlignment = Alignment.CenterHorizontally
+                )
+                {
+                    items(10) { PlanList() }
                 }
-            }
+            },
+
+
+
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyAppBar(){
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     CenterAlignedTopAppBar(
         title = { Text(text = "USW") },
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { drawerState.isOpen }) {
                 Icon(Icons.Default.Person, contentDescription = "Person")
             }
         },
         actions = {
             IconButton(onClick = { /* Handle action icon click */ }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
-        }
-    )
+        },
+        
 
+
+    )
 }
 
 @Composable
@@ -117,10 +127,11 @@ fun PlanList(){
                 onValueChange = {dateValue -> date.value = dateValue},
                 placeholder = { Text(text = "ex) 2/28")},
                 modifier = Modifier.width(100.dp))
-            LazyColumn{
-                item {
-                    TimeLine(modifier = Modifier)
-                    TimeLine(modifier = Modifier)
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)){
+                items(10) {
                     TimeLine(modifier = Modifier)
                 }
             }
