@@ -5,9 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,11 +25,11 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainUi(navController: NavController){
+fun MainUi(navController: NavController) {
     Surface(color = Purple80) {
         Scaffold(
-            content = {
-                innerPadding ->
+            topBar = { MyAppBar() },
+            content = { innerPadding ->
                 LazyColumn(
                     Modifier.fillMaxWidth(),
                     contentPadding = innerPadding,
@@ -41,24 +39,37 @@ fun MainUi(navController: NavController){
                     items(10) { PlanList() }
                 }
             },
-            bottomBar = { }
 
 
-
-        )
+            )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyAppBar(){
-    BottomAppBar(
-
+fun MyAppBar() {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    CenterAlignedTopAppBar(
+        title = { Text(text = "USW") },
+        navigationIcon = {
+            IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { drawerState.isOpen }) {
+                    Icon(Icons.Default.Person, contentDescription = "Person")
+                }
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* Handle action icon click */ }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
+            }
+        }
     )
+
 }
 
 @Composable
-fun TimeLine(modifier: Modifier){
+fun TimeLine(modifier: Modifier) {
     var time = rememberSaveable {
         mutableStateOf("")
     }
@@ -72,23 +83,23 @@ fun TimeLine(modifier: Modifier){
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround,
-        )
-        {
+    )
+    {
         TextField(
             value = time.value,
-            onValueChange = { timeValue -> time.value = timeValue},
+            onValueChange = { timeValue -> time.value = timeValue },
             label = { Text("시간") },
             modifier = modifier.width(100.dp)
         )
         TextField(
             value = place.value,
-            onValueChange = { placeValue -> place.value = placeValue},
+            onValueChange = { placeValue -> place.value = placeValue },
             label = { Text("장소") },
             modifier = modifier.width(100.dp)
         )
         TextField(
             value = plan.value,
-            onValueChange = { planValue -> plan.value = planValue},
+            onValueChange = { planValue -> plan.value = planValue },
             label = { Text("계획") },
             modifier = modifier.width(100.dp)
         )
@@ -97,11 +108,11 @@ fun TimeLine(modifier: Modifier){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanList(){
+fun PlanList() {
     var date = rememberSaveable {
         mutableStateOf("")
     }
-    Card(modifier = Modifier.padding(8.dp) ) {
+    Card(modifier = Modifier.padding(8.dp)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -110,13 +121,15 @@ fun PlanList(){
         ) {
             TextField(
                 value = date.value,
-                onValueChange = {dateValue -> date.value = dateValue},
-                placeholder = { Text(text = "ex) 2/28")},
-                modifier = Modifier.width(100.dp))
+                onValueChange = { dateValue -> date.value = dateValue },
+                placeholder = { Text(text = "ex) 2/28") },
+                modifier = Modifier.width(100.dp)
+            )
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
-                    .height(150.dp)){
+                    .height(150.dp)
+            ) {
                 items(10) {
                     TimeLine(modifier = Modifier)
                 }
@@ -126,23 +139,20 @@ fun PlanList(){
 }
 
 
-
-
-
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun MainUiPreview(){
+fun MainUiPreview() {
     MainUi(navController = rememberNavController())
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun TimeLinePreview(){
+fun TimeLinePreview() {
     TimeLine(modifier = Modifier.padding(8.dp))
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun PlanListPreview(){
+fun PlanListPreview() {
     PlanList()
 }
