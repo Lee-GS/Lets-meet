@@ -30,7 +30,6 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 fun MainUi(navController: NavController){
     Surface(color = Purple80) {
         Scaffold(
-            topBar = { MyAppBar() },
             content = {
                 innerPadding ->
                 LazyColumn(
@@ -42,6 +41,7 @@ fun MainUi(navController: NavController){
                     items(10) { PlanList() }
                 }
             },
+            bottomBar = { }
 
 
 
@@ -52,21 +52,7 @@ fun MainUi(navController: NavController){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyAppBar(){
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    CenterAlignedTopAppBar(
-        title = { Text(text = "USW") },
-        navigationIcon = {
-            IconButton(onClick = { drawerState.isOpen }) {
-                Icon(Icons.Default.Person, contentDescription = "Person")
-            }
-        },
-        actions = {
-            IconButton(onClick = { /* Handle action icon click */ }) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu")
-            }
-        },
-        
-
+    BottomAppBar(
 
     )
 }
