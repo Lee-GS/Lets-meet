@@ -39,6 +39,14 @@ fun MainUi(navController: NavController) {
                     items(10) { PlanList() }
                 }
             },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { /*TODO*/ },
+                    content = {
+                        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+                    }
+                )
+            }
 
 
             )
