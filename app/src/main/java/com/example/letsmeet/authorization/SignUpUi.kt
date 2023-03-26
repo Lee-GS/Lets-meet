@@ -33,8 +33,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
+import com.example.letsmeet.authorization.AuthFireBase.Companion.firestore
 import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.ktx.Firebase
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
@@ -53,6 +55,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
     var pw_check = rememberSaveable {
         mutableStateOf("")
     }
+
 
     Column(
         Modifier.fillMaxSize(),
@@ -97,11 +100,13 @@ fun signUp(modifier: Modifier, navController: NavController) {
         else if(pw.value != pw_check.value && pw.value != "" && pw_check.value != ""){
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
+        var userDTO = UserDTO(name.value,email.value,pw.value)
 
         Button(
             onClick = {
             if (pw.value == pw_check.value){
                 register(email.value,pw.value,navController,context)
+                firestore.collection("users").document(name.value).set(userDTO)
                 } },
             modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
@@ -116,6 +121,7 @@ fun register(id : String, password : String, navController: NavController, conte
                 auth.currentUser?.sendEmailVerification()
                     ?.addOnCompleteListener { sendtask ->
                         if(sendtask.isSuccessful){
+
                             Toast.makeText(context,"회원가입에 성공하였습니다." +
                                     "전송된 이메일을 확인해 주세요!",Toast.LENGTH_SHORT).show()
                         }
@@ -123,7 +129,7 @@ fun register(id : String, password : String, navController: NavController, conte
                             Toast.makeText(context,"메일 전송실패!",Toast.LENGTH_SHORT).show()
                         }
                     }
-                navController.navigate(Screen.dialogScreen.route)
+                navController.navigate(Screen.DialogScreen.route)
                 Log.d(TAG,"SUCCESS")
             }
             else{
