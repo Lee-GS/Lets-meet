@@ -3,6 +3,5 @@ package com.example.letsmeet.authorization
 data class UserDTO(
     val name : String = " ",
     val email : String = " ",
-    val password : String = " ",
-    val _password : String = " "
+    val password : String = " "
 )
