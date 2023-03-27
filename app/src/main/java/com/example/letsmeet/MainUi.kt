@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,15 +21,22 @@ import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.ui.theme.Pink40
 import com.example.letsmeet.ui.theme.Purple40
 import com.example.letsmeet.ui.theme.Purple80
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi(navController: NavController) {
-    Surface(color = Purple80) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerContent = { FriendList(modifier = Modifier)},
+        drawerState = drawerState
+    ) {
         Scaffold(
-            topBar = { MyAppBar() },
+            topBar = { MyAppBar(drawerState, scope) },
             content = { innerPadding ->
                 LazyColumn(
                     Modifier.fillMaxWidth(),
@@ -38,6 +46,7 @@ fun MainUi(navController: NavController) {
                 {
                     items(10) { PlanList() }
                 }
+
             },
             floatingActionButton = {
                 FloatingActionButton(
@@ -49,29 +58,27 @@ fun MainUi(navController: NavController) {
             }
 
 
-            )
+        )
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyAppBar() {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
     CenterAlignedTopAppBar(
         title = { Text(text = "USW") },
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                IconButton(onClick = { drawerState.isOpen }) {
-                    Icon(Icons.Default.Person, contentDescription = "Person")
-                }
+            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                Icon(Icons.Default.Person, contentDescription = "Person")
             }
         },
         actions = {
             IconButton(onClick = { /* Handle action icon click */ }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
-        }
+        },
+
     )
 
 }
