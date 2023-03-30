@@ -7,9 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +48,7 @@ fun MainUi(navController: NavController) {
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { },
                     content = {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                     }
@@ -66,6 +64,9 @@ fun MainUi(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
+    var isDropDownMenuExpanded by remember {
+        mutableStateOf(false)
+    }
     CenterAlignedTopAppBar(
         title = { Text(text = "USW") },
         navigationIcon = {
@@ -74,7 +75,7 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
             }
         },
         actions = {
-            IconButton(onClick = { /* Handle action icon click */ }) {
+            IconButton(onClick = { isDropDownMenuExpanded = true }) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
         },
