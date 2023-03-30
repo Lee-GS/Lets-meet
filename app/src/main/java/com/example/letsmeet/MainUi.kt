@@ -26,7 +26,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainUi(navController: NavController) {
+fun MainUi() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -60,30 +60,6 @@ fun MainUi(navController: NavController) {
     }
 
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
-    var isDropDownMenuExpanded by remember {
-        mutableStateOf(false)
-    }
-    CenterAlignedTopAppBar(
-        title = { Text(text = "USW") },
-        navigationIcon = {
-            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                Icon(Icons.Default.Person, contentDescription = "Person")
-            }
-        },
-        actions = {
-            IconButton(onClick = { isDropDownMenuExpanded = true }) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu")
-            }
-        },
-
-    )
-
-}
-
 @Composable
 fun TimeLine(modifier: Modifier) {
     var time = rememberSaveable {
@@ -158,7 +134,7 @@ fun PlanList() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun MainUiPreview() {
-    MainUi(navController = rememberNavController())
+    MainUi()
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
