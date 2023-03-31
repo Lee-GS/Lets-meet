@@ -29,7 +29,7 @@ fun Navigation(navController: NavController){
             registerDialog(navController = navController)
         }
         composable(route = Screen.MainScreen.route){
-            MainUi(navController = navController)
+            MainUi()
         }
     }
 }
