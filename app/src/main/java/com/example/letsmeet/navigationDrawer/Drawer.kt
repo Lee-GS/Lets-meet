@@ -1,6 +1,6 @@
-package com.example.letsmeet
+package com.example.letsmeet.navigationDrawer
 
-import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,16 +11,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.example.letsmeet.R
+import com.example.letsmeet.authorization.AuthFireBase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestoreSettings
 
-private var friends = mutableListOf<String>(
+val db = FirebaseFirestore.getInstance()
+var friends = mutableListOf<String?>(
     "홍길동",
     "김병국",
     "짱구"
 )
 
+fun addFriend(){
+    db.collection("users")
+        .get()
+        .addOnCompleteListener {  result->
+            for (document in result.result){
+                val name = document.getString("name")
+                friends.add(name)
+            }
+            Log.d("Success","성공!!")
+        }
+        .addOnFailureListener { exeption ->
+            Log.e("Faile", "실패!!!! 이유는: $exeption")
+        }
+}
+
+
 @Composable
-fun FriendList(modifier: Modifier){
+fun FriendList(modifier: Modifier) {
+    addFriend()
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -32,7 +53,7 @@ fun FriendList(modifier: Modifier){
         LazyColumn(
         )
         {
-            items(friends){
+            items(friends) {
                 Text("$it")
             }
         }
@@ -42,6 +63,6 @@ fun FriendList(modifier: Modifier){
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun FriendListPreview(){
+fun FriendListPreview() {
     FriendList(modifier = Modifier)
 }
