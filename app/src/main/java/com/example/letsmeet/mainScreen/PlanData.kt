@@ -1,4 +1,4 @@
-package com.example.letsmeet.navigationDrawer
+package com.example.letsmeet.mainScreen
 
 data class PlanData(
     val date: String = " ",

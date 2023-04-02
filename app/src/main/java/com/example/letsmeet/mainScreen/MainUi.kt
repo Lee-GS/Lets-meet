@@ -1,6 +1,5 @@
-package com.example.letsmeet
+package com.example.letsmeet.mainScreen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,17 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.letsmeet.ui.theme.Pink40
+import com.example.letsmeet.navigationDrawer.FriendList
+import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.ui.theme.Purple40
-import com.example.letsmeet.ui.theme.Purple80
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +23,7 @@ fun MainUi() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
-        drawerContent = { FriendList(modifier = Modifier)},
+        drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
     ) {
         Scaffold(
@@ -60,6 +53,7 @@ fun MainUi() {
     }
 
 }
+
 @Composable
 fun TimeLine(modifier: Modifier) {
     var time = rememberSaveable {
