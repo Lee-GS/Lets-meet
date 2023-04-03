@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.signIn
+import com.example.letsmeet.navigationDrawer.addFriend
 import com.example.letsmeet.ui.theme.LetsMeetTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
             LetsMeetTheme {
                 val navController : NavHostController = rememberNavController()
                 Navigation(navController = navController)
+                addFriend()
             }
         }
     }
