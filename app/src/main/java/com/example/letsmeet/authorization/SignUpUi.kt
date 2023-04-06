@@ -55,6 +55,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
     var pw_check = rememberSaveable {
         mutableStateOf("")
     }
+    var friendList = mutableListOf<String>()
 
 
     Column(
@@ -100,13 +101,13 @@ fun signUp(modifier: Modifier, navController: NavController) {
         else if(pw.value != pw_check.value && pw.value != "" && pw_check.value != ""){
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
-        var userDTO = UserDTO(name.value,email.value,pw.value)
+        var userDTO = UserDTO(name.value,email.value,pw.value,friendList)
 
         Button(
             onClick = {
             if (pw.value == pw_check.value){
                 register(email.value,pw.value,navController,context)
-                firestore.collection("users").document(name.value).set(userDTO)
+                firestore.collection("users").document(email.value).set(userDTO)
                 } },
             modifier = modifier.fillMaxWidth()) {
             Text(text = "회원가입하기")
