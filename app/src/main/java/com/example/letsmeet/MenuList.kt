@@ -45,52 +45,66 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
                 modifier = Modifier.wrapContentSize()
             ) {
                 DropdownMenuItem(
-                    text = { Text(text = "공유하기")},
-                    onClick = { /*TODO*/ }
+                    text = { Text(text = "공유하기") },
+                    onClick = {
+                        isDropDownMenuExpanded = false
+                    }
                 )
                 DropdownMenuItem(
-                    text = { Text(text = "친구추가 하기")},
-                    onClick = { opendialog = true }
+                    text = { Text(text = "친구추가 하기") },
+                    onClick = {
+                        opendialog = true
+                        isDropDownMenuExpanded = false
+                    }
                 )
             }
         }
     )
-    if(opendialog){
+    if (opendialog) {
         AddFriendsDialog()
-        {opendialog = false}
+        { opendialog = false }
     }
 
 }
 
 
 @Composable
-fun AddFriendsDialog(onChange: () -> Unit){
+fun AddFriendsDialog(onChange: () -> Unit) {
     var friend = rememberSaveable {
         mutableStateOf("")
     }
     AlertDialog(
         onDismissRequest = { onChange() },
-        title = { Text(text = "친구 추가", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)},
+        title = {
+            Text(
+                text = "친구 추가",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
         text = {
-               Column() {
-                   TextField(
-                       value = friend.value,
-                       onValueChange = {friendValue -> friend.value = friendValue},
-                       placeholder = { Text(text = "이메일을 입력하세요")}
-                   )
-                   TextButton(
-                       onClick = { /*TODO*/ }) {
-                       Text(text ="추가하기", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-                   }
-               }
-               },
+            Column() {
+                TextField(
+                    value = friend.value,
+                    onValueChange = { friendValue -> friend.value = friendValue },
+                    placeholder = { Text(text = "이메일을 입력하세요") }
+                )
+                TextButton(
+                    onClick = { /*TODO*/ }) {
+                    Text(
+                        text = "추가하기",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        },
         confirmButton = {
             TextButton(onClick = { onChange() }) {
                 Text(text = "닫기")
             }
         }
     )
-
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
