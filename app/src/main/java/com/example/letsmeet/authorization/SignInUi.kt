@@ -3,6 +3,7 @@ package com.example.letsmeet.authorization
 import android.content.Context
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Email
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -75,6 +76,7 @@ fun login(email: String, password: String, context: Context,navController: NavCo
                 if (checkAuth()){
                     AuthFireBase.email=email
                     Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
+                    Log.d("Auth","${auth.currentUser}")
                     navController.navigate(Screen.MainScreen.route)
                 }else{
 
