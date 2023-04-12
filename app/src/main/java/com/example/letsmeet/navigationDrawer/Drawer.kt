@@ -17,31 +17,27 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestoreSettings
 
 val db = FirebaseFirestore.getInstance()
-var friends = mutableListOf<String?>(
-    "홍길동",
-    "김병국",
-    "짱구"
-)
+
+var friends = mutableListOf<String?>()
 
 fun addFriend(){
     db.collection("users")
         .get()
         .addOnCompleteListener {  result->
-            for (document in result.result){
+            for ( document in result.result){
                 val name = document.getString("name")
                 friends.add(name)
             }
             Log.d("Success","성공!!")
         }
         .addOnFailureListener { exeption ->
-            Log.e("Faile", "실패!!!! 이유는: $exeption")
+            Log.e("Fail", "실패!!!! 이유는: $exeption")
         }
 }
 
 
 @Composable
 fun FriendList(modifier: Modifier) {
-    addFriend()
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
