@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun acceptFriend(onChange: () -> Unit){
+fun acceptFriend(name:String, onChange: () -> Unit){
     AlertDialog(
         onDismissRequest = { onChange() },
         title = {
@@ -29,7 +29,7 @@ fun acceptFriend(onChange: () -> Unit){
         text = {
             Column() {
                 Text(
-                    text = "개구리",
+                    text = "$name",
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                     fontSize = 20.sp
@@ -55,5 +55,5 @@ fun acceptFriend(onChange: () -> Unit){
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun acceptFriendPreview(){
-    acceptFriend{}
+    acceptFriend("name"){}
 }
