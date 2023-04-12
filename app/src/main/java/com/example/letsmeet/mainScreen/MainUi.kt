@@ -14,14 +14,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
+import com.example.letsmeet.authorization.AuthFireBase
+import com.example.letsmeet.navigationDrawer.acceptFriend
+import com.example.letsmeet.navigationDrawer.db
 import com.example.letsmeet.ui.theme.Purple40
 
+val currentEmail = AuthFireBase.auth.currentUser?.email
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var request by remember {
+        mutableStateOf(false)
+    }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -37,6 +44,12 @@ fun MainUi() {
                 {
                     items(10) { PlanList() }
                 }
+                if (request){
+                    acceptFriend() {
+                        request=false
+                    }
+                }
+
 
             },
             floatingActionButton = {
@@ -51,18 +64,27 @@ fun MainUi() {
 
         )
     }
+    db.collection("users").document(currentEmail.toString()).get().addOnSuccessListener { document ->
+        if (document != null) {
+            val check12 = document.getString("friendrequest")
+            if (check12 == true.toString()) {
+
+            }
+
+        }
+    }
 
 }
 
 @Composable
 fun TimeLine(modifier: Modifier) {
-    var time = rememberSaveable {
+    val time = rememberSaveable {
         mutableStateOf("")
     }
-    var place = rememberSaveable {
+    val place = rememberSaveable {
         mutableStateOf("")
     }
-    var plan = rememberSaveable {
+    val plan = rememberSaveable {
         mutableStateOf("")
     }
     Row(
@@ -95,7 +117,7 @@ fun TimeLine(modifier: Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlanList() {
-    var date = rememberSaveable {
+    val date = rememberSaveable {
         mutableStateOf("")
     }
     Card(modifier = Modifier.padding(8.dp)) {
