@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.letsmeet.navigationDrawer.db
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
@@ -67,6 +68,15 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
 
 }
 
+fun requestFriend(email : String){
+    db.collection("users").document(email).get().addOnSuccessListener {document ->
+        if (document != null){
+
+        }
+
+    }
+}
+
 
 @Composable
 fun AddFriendsDialog(onChange: () -> Unit) {
@@ -90,7 +100,7 @@ fun AddFriendsDialog(onChange: () -> Unit) {
                     placeholder = { Text(text = "이메일을 입력하세요") }
                 )
                 TextButton(
-                    onClick = { /*TODO*/ }) {
+                    onClick = { requestFriend(friend.value) }) {
                     Text(
                         text = "추가하기",
                         textAlign = TextAlign.Center,
