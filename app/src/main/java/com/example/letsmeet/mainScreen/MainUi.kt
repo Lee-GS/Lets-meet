@@ -1,5 +1,6 @@
 package com.example.letsmeet.mainScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +27,8 @@ val currentEmail = AuthFireBase.auth.currentUser?.email
 fun MainUi() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var request by remember {
+    var fname by remember { mutableStateOf("") }
+    var opendialog by remember {
         mutableStateOf(false)
     }
     ModalNavigationDrawer(
@@ -44,13 +46,6 @@ fun MainUi() {
                 {
                     items(10) { PlanList() }
                 }
-                if (request){
-                    acceptFriend() {
-                        request=false
-                    }
-                }
-
-
             },
             floatingActionButton = {
                 FloatingActionButton(
@@ -64,14 +59,27 @@ fun MainUi() {
 
         )
     }
-    db.collection("users").document(currentEmail.toString()).get().addOnSuccessListener { document ->
-        if (document != null) {
-            val check12 = document.getString("friendrequest")
-            if (check12 == true.toString()) {
 
+    if (currentEmail != null) {
+        LaunchedEffect(currentEmail) {
+            db.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
+                if (document != null) {
+                    val _fname = document.get("friendrequest").toString()
+                    fname = _fname
+                    Log.d("Succcess", "$_fname")
+                }
             }
-
         }
+        if (fname.isNotEmpty()){
+            opendialog=true
+        }
+        if(opendialog){
+            acceptFriend(fname) {
+                fname = ""
+                opendialog = false
+            }
+        }
+
     }
 
 }
