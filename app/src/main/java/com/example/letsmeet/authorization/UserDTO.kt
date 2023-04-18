@@ -5,5 +5,5 @@ data class UserDTO(
     val email : String = " ",
     val password : String = " ",
     val friendList : MutableList<String>,
-    val friendrequest : MutableList<String>
+    val friendrequest : MutableList<String> = mutableListOf()
 )
