@@ -35,7 +35,7 @@ fun acceptFriend(name:String, onChange: () -> Unit){
                     fontSize = 20.sp
                 )
                 TextButton(
-                    onClick = { /*TODO*/ }) {
+                    onClick = { onChange() }) {
                     Text(
                         text = "수락하기",
                         textAlign = TextAlign.Center,
