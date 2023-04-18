@@ -1,5 +1,6 @@
 package com.example.letsmeet
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
@@ -12,7 +13,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.letsmeet.mainScreen.currentEmail
 import com.example.letsmeet.navigationDrawer.db
+import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.reflect.typeOf
@@ -69,11 +72,9 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
 }
 
 fun requestFriend(email : String){
-    db.collection("users").document(email).get().addOnSuccessListener {document ->
-        if (document != null){
-
-        }
-
+    db.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
+        currentEmail)).addOnSuccessListener {
+        Log.d("SUCCESS","친구추가 성공")
     }
 }
 
