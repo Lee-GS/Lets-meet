@@ -25,7 +25,9 @@ fun addFriend(){
         .get()
         .addOnCompleteListener {  result->
             for ( document in result.result){
-                val name = document.getString("name")
+                val name = document.get("friendlist").toString()
+                name.replace("[","")
+                name.replace("]","")
                 friends.add(name)
             }
             Log.d("Success","성공!!")
@@ -38,6 +40,7 @@ fun addFriend(){
 
 @Composable
 fun FriendList(modifier: Modifier) {
+    addFriend()
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -54,7 +57,6 @@ fun FriendList(modifier: Modifier) {
             }
         }
     }
-
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
