@@ -74,7 +74,7 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
 fun requestFriend(email : String){
     db.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
         currentEmail)).addOnSuccessListener {
-        Log.d("SUCCESS","친구추가 성공")
+        Log.d("SUCCESS","친구추가 전송 성공 $currentEmail")
     }
 }
 
@@ -101,7 +101,10 @@ fun AddFriendsDialog(onChange: () -> Unit) {
                     placeholder = { Text(text = "이메일을 입력하세요") }
                 )
                 TextButton(
-                    onClick = { requestFriend(friend.value) }) {
+                    onClick = {
+                        requestFriend(friend.value)
+                        onChange()
+                    }) {
                     Text(
                         text = "추가하기",
                         textAlign = TextAlign.Center,
