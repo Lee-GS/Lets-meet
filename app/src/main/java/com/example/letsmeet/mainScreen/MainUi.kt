@@ -20,7 +20,7 @@ import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.navigationDrawer.db
 import com.example.letsmeet.ui.theme.Purple40
 
-val currentEmail = AuthFireBase.auth.currentUser?.email
+val currentEmail = AuthFireBase.email
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,9 +28,7 @@ fun MainUi() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var fname by remember { mutableStateOf("") }
-    var opendialog by remember {
-        mutableStateOf(false)
-    }
+    var opendialog by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -64,22 +62,22 @@ fun MainUi() {
         LaunchedEffect(currentEmail) {
             db.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
                 if (document != null) {
-                    val _fname = document.get("friendrequest").toString()
-                    fname = _fname
-                    Log.d("Succcess", "$_fname")
+                    val _fname = document.get("friendrequest")
+                    Log.d("~~",_fname.toString())
+                    fname = _fname.toString()
+                    Log.d("친구추가 보낸사람", fname)
                 }
             }
         }
-        if (fname.isNotEmpty()){
-            opendialog=true
+    }
+    if (fname.length > 3){
+        opendialog=true
+    }
+    if(opendialog){
+        acceptFriend(fname) {
+            fname = ""
+            opendialog = false
         }
-        if(opendialog){
-            acceptFriend(fname) {
-                fname = ""
-                opendialog = false
-            }
-        }
-
     }
 
 }
