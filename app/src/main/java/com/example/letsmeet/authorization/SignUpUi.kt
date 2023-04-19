@@ -34,11 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.AuthFireBase.Companion.firestore
-import com.example.letsmeet.authorization.ui.theme.ui.theme.LetsMeetTheme
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestoreSettings
-import com.google.firebase.ktx.Firebase
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun signUp(modifier: Modifier, navController: NavController) {
