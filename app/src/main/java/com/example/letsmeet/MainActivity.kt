@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             LetsMeetTheme {
                 val navController : NavHostController = rememberNavController()
                 Navigation(navController = navController)
-                addFriend()
+                //addFriend()
             }
         }
     }
