@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.registerDialog
 import com.example.letsmeet.authorization.signIn
 import com.example.letsmeet.authorization.signUp
+import com.example.letsmeet.mainScreen.MainUi
 
 @Composable
 fun Navigation(navController: NavController){
