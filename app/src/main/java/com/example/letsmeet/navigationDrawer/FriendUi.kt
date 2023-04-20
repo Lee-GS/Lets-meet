@@ -40,7 +40,7 @@ fun acceptFriend(name:String, onChange: () -> Unit){
                 )
                 TextButton(
                     onClick = {
-                        checkFriend(true)
+                        rebuildFriendData(true)
                         onChange()
                     }) {
                     Text(
@@ -53,7 +53,7 @@ fun acceptFriend(name:String, onChange: () -> Unit){
         },
         confirmButton = {
             TextButton(onClick = {
-                checkFriend(false)
+                rebuildFriendData(false)
                 onChange()
             }) {
                 Text(text = "거절하기")
