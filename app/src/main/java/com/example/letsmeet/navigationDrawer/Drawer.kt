@@ -18,7 +18,7 @@ import com.google.firebase.firestore.ktx.firestoreSettings
 
 val db = FirebaseFirestore.getInstance()
 
-var friends = mutableListOf<String?>()
+var friends = mutableListOf<String>()
 
 fun addFriend(){
     db.collection("users")
@@ -40,7 +40,6 @@ fun addFriend(){
 
 @Composable
 fun FriendList(modifier: Modifier) {
-    addFriend()
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
