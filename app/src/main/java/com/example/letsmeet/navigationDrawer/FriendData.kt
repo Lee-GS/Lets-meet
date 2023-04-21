@@ -27,10 +27,10 @@ fun rebuildFriendData(check : Boolean) {
                 db.collection("users").document(currentEmail).update("friendlist",friendList).addOnSuccessListener {
                     Log.d("SUCCESS","친구 목록 업데이트 성공")
                 }
+                friends = friendList.toMutableList()
+                Log.d("친구 목록:", friends.toString())
 
             }
         }
-        friends = friendList.toMutableList()
-        Log.d("친구 목록:", friends.toString())
     }
 }
