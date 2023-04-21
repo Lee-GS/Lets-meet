@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.authorization.signIn
 import com.example.letsmeet.navigationDrawer.addFriend
 import com.example.letsmeet.ui.theme.LetsMeetTheme
+import kotlinx.coroutines.coroutineScope
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
             LetsMeetTheme {
                 val navController : NavHostController = rememberNavController()
                 Navigation(navController = navController)
-                //addFriend()
+                addFriend()
             }
         }
     }
