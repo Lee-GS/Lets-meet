@@ -7,7 +7,6 @@ import com.google.firebase.firestore.FieldValue
 
 
 fun rebuildFriendData(check : Boolean) {
-    val friendList = mutableListOf<String>()
     val friendRequest = mutableListOf<String>()
 
     if (currentEmail != null) {
@@ -17,19 +16,17 @@ fun rebuildFriendData(check : Boolean) {
                 Log.d("Succcess", friendRequest.toString())
                 if (check) {
                     for (i in 0 until friendRequest.size){
-                        friendList.add(friendRequest[i])
+                        friends.add(friendRequest[i])
                     }
                     friendRequest.clear()
                 }
                 db.collection("users").document(currentEmail).update("friendrequest",friendRequest).addOnSuccessListener {
                     Log.d("SUCCESS","친구 승인 목록 삭제 성공")
                 }
-                db.collection("users").document(currentEmail).update("friendlist",friendList).addOnSuccessListener {
+                db.collection("users").document(currentEmail).update("friendlist", friends).addOnSuccessListener {
                     Log.d("SUCCESS","친구 목록 업데이트 성공")
                 }
-                friends = friendList.toMutableList()
                 Log.d("친구 목록:", friends.toString())
-
             }
         }
     }
