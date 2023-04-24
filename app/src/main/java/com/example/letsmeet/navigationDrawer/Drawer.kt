@@ -26,8 +26,6 @@ fun addFriend(){
         .addOnCompleteListener {  result->
             for ( document in result.result){
                 val name = document.get("friendlist").toString()
-                name.replace("[","")
-                name.replace("]","")
                 friends.add(name)
             }
             Log.d("Success","성공!!")
