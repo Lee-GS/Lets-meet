@@ -11,13 +11,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.letsmeet.AddFriendsDialog
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.navigationDrawer.db
+import com.example.letsmeet.requestFriend
 import com.example.letsmeet.ui.theme.Purple40
 
 val currentEmail = AuthFireBase.email
@@ -42,12 +45,12 @@ fun MainUi() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    items(10) { PlanList() }
+                    items(5) { PlanList() }
                 }
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { },
+                    onClick = {},
                     content = {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                     }
@@ -81,6 +84,29 @@ fun MainUi() {
     }
 
 }
+
+@Composable
+fun addPlanList(onChange : () -> Unit){
+    AlertDialog(
+        onDismissRequest = { onChange() },
+        title = {
+            Text(
+                text = "add plan",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            PlanList()
+        },
+        confirmButton = {
+            TextButton(onClick = { onChange() }) {
+                Text(text = "닫기")
+            }
+        }
+    )
+}
+
 
 @Composable
 fun TimeLine(modifier: Modifier) {
@@ -144,7 +170,7 @@ fun PlanList() {
                     .fillMaxWidth()
                     .height(150.dp)
             ) {
-                items(10) {
+                items(1) {
                     TimeLine(modifier = Modifier)
                 }
             }
@@ -157,6 +183,12 @@ fun PlanList() {
 @Composable
 fun MainUiPreview() {
     MainUi()
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun addPlanListPreview() {
+    addPlanList { }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
