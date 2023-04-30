@@ -11,19 +11,15 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.letsmeet.AddFriendsDialog
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.navigationDrawer.db
-import com.example.letsmeet.requestFriend
 import com.example.letsmeet.ui.theme.Purple40
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 val currentEmail = AuthFireBase.email
 
@@ -95,7 +91,9 @@ fun MainUi() {
 
 @Composable
 fun addPlanList(onChange : () -> Unit){
-    var num = 1
+    var num = remember {
+        mutableStateOf(1)
+    }
     AlertDialog(
         onDismissRequest = { onChange() },
         title = {
@@ -109,7 +107,7 @@ fun addPlanList(onChange : () -> Unit){
                     textAlign = TextAlign.Center
                 )
                 IconButton(
-                    onClick = { num++ },
+                    onClick = { num.value++ },
                 ) {
                     Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                 }
@@ -172,7 +170,7 @@ fun TimeLine(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanList(count : Int) {
+fun PlanList(count: MutableState<Int>) {
     val date = rememberSaveable {
         mutableStateOf("")
     }
@@ -194,7 +192,7 @@ fun PlanList(count : Int) {
                     .fillMaxWidth()
                     .height(150.dp)
             ) {
-                items(count) {
+                items(count.value) {
                     TimeLine(modifier = Modifier)
                 }
             }
@@ -224,5 +222,5 @@ fun TimeLinePreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun PlanListPreview() {
-    PlanList(5)
+    //PlanList()
 }
