@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.navigationDrawer.db
 import com.example.letsmeet.requestFriend
 import com.example.letsmeet.ui.theme.Purple40
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 val currentEmail = AuthFireBase.email
 
@@ -32,6 +34,7 @@ fun MainUi() {
     val scope = rememberCoroutineScope()
     var fname by remember { mutableStateOf("") }
     var opendialog by remember { mutableStateOf(false) }
+    var openfloating by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -45,12 +48,12 @@ fun MainUi() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    items(5) { PlanList() }
+                    //items(5) { PlanList() }
                 }
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = { openfloating =true },
                     content = {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                     }
@@ -82,24 +85,45 @@ fun MainUi() {
             opendialog = false
         }
     }
+    if (openfloating){
+        addPlanList {
+            openfloating = false
+        }
+    }
 
 }
 
 @Composable
 fun addPlanList(onChange : () -> Unit){
+    var num = 1
     AlertDialog(
         onDismissRequest = { onChange() },
         title = {
-            Text(
-                text = "add plan",
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "일정 추가하기",
+                    textAlign = TextAlign.Center
+                )
+                IconButton(
+                    onClick = { num++ },
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+                }
+            }
         },
         text = {
-            PlanList()
+            PlanList(num)
         },
         confirmButton = {
+            TextButton(onClick = { onChange() }) {
+                Text(text = "추가")
+            }
+        },
+        dismissButton = {
             TextButton(onClick = { onChange() }) {
                 Text(text = "닫기")
             }
@@ -148,7 +172,7 @@ fun TimeLine(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanList() {
+fun PlanList(count : Int) {
     val date = rememberSaveable {
         mutableStateOf("")
     }
@@ -170,7 +194,7 @@ fun PlanList() {
                     .fillMaxWidth()
                     .height(150.dp)
             ) {
-                items(1) {
+                items(count) {
                     TimeLine(modifier = Modifier)
                 }
             }
@@ -200,5 +224,5 @@ fun TimeLinePreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun PlanListPreview() {
-    PlanList()
+    PlanList(5)
 }
