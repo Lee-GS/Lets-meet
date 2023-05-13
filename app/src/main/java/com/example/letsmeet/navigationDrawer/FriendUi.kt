@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.mainScreen.MainUi
 import com.example.letsmeet.mainScreen.currentEmail
 import com.google.firebase.firestore.FieldValue
@@ -46,7 +47,7 @@ fun acceptFriend(name:String, onChange: () -> Unit){
                     Text(
                         text = "수락하기",
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                 }
             }
@@ -63,6 +64,7 @@ fun acceptFriend(name:String, onChange: () -> Unit){
 }
 
 fun checkFriend(check : Boolean){
+    val db = AuthFireBase.firestore
     if (currentEmail != null) {
             db.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
                 if (document != null) {

@@ -18,8 +18,8 @@ import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
-import com.example.letsmeet.navigationDrawer.db
 import com.example.letsmeet.ui.theme.Purple40
+import com.google.firebase.firestore.FirebaseFirestore
 
 val currentEmail = AuthFireBase.email
 
@@ -62,7 +62,7 @@ fun MainUi() {
 
     if (currentEmail != null) {
         LaunchedEffect(currentEmail) {
-            db.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
+            AuthFireBase.firestore.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
                 if (document != null) {
                     val _fname = document.get("friendrequest")
                     Log.d("~~",_fname.toString())
@@ -222,5 +222,5 @@ fun TimeLinePreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun PlanListPreview() {
-    //PlanList()
+    //PlanList(1)
 }

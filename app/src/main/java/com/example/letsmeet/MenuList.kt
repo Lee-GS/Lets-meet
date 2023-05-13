@@ -13,8 +13,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.mainScreen.currentEmail
-import com.example.letsmeet.navigationDrawer.db
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -72,7 +72,7 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
 }
 
 fun requestFriend(email : String){
-    db.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
+    AuthFireBase.firestore.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
         currentEmail)).addOnSuccessListener {
         Log.d("SUCCESS","친구추가 전송 성공 $currentEmail")
     }
