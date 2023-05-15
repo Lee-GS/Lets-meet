@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.MainActivity
 import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.AuthFireBase.Companion.checkAuth
@@ -60,6 +61,7 @@ fun signIn(modifier: Modifier,navController: NavController) {
         Button(onClick = { if(email.value != "" && pw.value !=" ") login(email.value,pw.value,context,navController) },
             modifier = modifier.fillMaxWidth()) {
             Text(text = "로그인")
+
         }
         Button(onClick = { navController.navigate(route = Screen.SignUpScreen.route)},
             modifier = modifier.fillMaxWidth()
@@ -76,7 +78,7 @@ fun login(email: String, password: String, context: Context,navController: NavCo
                 if (checkAuth()){
                     AuthFireBase.email=email
                     Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
-                    Log.d("Auth","${auth.currentUser}")
+                    Log.d("현재 유저:","${AuthFireBase.email}")
                     navController.navigate(Screen.MainScreen.route)
                 }else{
 

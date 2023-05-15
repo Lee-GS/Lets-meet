@@ -13,6 +13,8 @@ class AuthFireBase : MultiDexApplication() {
         firestore = FirebaseFirestore.getInstance()
     }
 
+
+
     companion object{
         lateinit var auth: FirebaseAuth
         lateinit var firestore : FirebaseFirestore
@@ -30,6 +32,7 @@ class AuthFireBase : MultiDexApplication() {
             }
         }
     }
+
 
 }
 

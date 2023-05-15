@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.mainScreen.MainUi
-import com.example.letsmeet.mainScreen.currentEmail
 import com.google.firebase.firestore.FieldValue
 
 @Composable
@@ -65,19 +64,19 @@ fun acceptFriend(name:String, onChange: () -> Unit){
 
 fun checkFriend(check : Boolean){
     val db = AuthFireBase.firestore
-    if (currentEmail != null) {
-            db.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
+    if (AuthFireBase.email != null) {
+            db.collection("users").document(AuthFireBase.email!!).get().addOnSuccessListener { document ->
                 if (document != null) {
                     val _fname = document.get("friendrequest")
                     Log.d("Succcess", _fname.toString())
                     if (check) {
-                        db.collection("users").document(currentEmail).update(
+                        db.collection("users").document(AuthFireBase.email!!).update(
                             "friendlist", FieldValue.arrayUnion(_fname)).addOnSuccessListener {
                             friends.add(_fname.toString())
                             Log.d("SUCCESS", "친구 추가 성공")
                         }
                     }
-                    db.collection("users").document(currentEmail).update("friendrequest", FieldValue.arrayRemove(_fname)).addOnSuccessListener {
+                    db.collection("users").document(AuthFireBase.email!!).update("friendrequest", FieldValue.arrayRemove(_fname)).addOnSuccessListener {
                         Log.d("SUCCESS","친구 승인 목록 삭제 성공")
                     }
                 }

@@ -14,14 +14,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.MainActivity
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
+import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.ui.theme.Purple40
 import com.google.firebase.firestore.FirebaseFirestore
-
-val currentEmail = AuthFireBase.email
+import com.google.rpc.context.AttributeContext.Auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,9 +63,9 @@ fun MainUi() {
         )
     }
 
-    if (currentEmail != null) {
-        LaunchedEffect(currentEmail) {
-            AuthFireBase.firestore.collection("users").document(currentEmail).get().addOnSuccessListener { document ->
+    if (AuthFireBase.email != null) {
+        LaunchedEffect(AuthFireBase.email) {
+            AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get().addOnSuccessListener { document ->
                 if (document != null) {
                     val _fname = document.get("friendrequest")
                     Log.d("~~",_fname.toString())
@@ -86,6 +89,8 @@ fun MainUi() {
             openfloating = false
         }
     }
+
+
 
 }
 
@@ -199,6 +204,7 @@ fun PlanList(count: MutableState<Int>) {
         }
     }
 }
+
 
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
