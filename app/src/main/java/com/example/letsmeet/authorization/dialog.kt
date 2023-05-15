@@ -15,14 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.letsmeet.Screen
 
 
 @Composable
-fun dialogContent(navController: NavController){
+fun dialogContent(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.Bottom,
-    ){
+    ) {
         Spacer(
             modifier = Modifier
                 .height(12.dp)
@@ -42,8 +43,12 @@ fun dialogContent(navController: NavController){
         )
         Button(
             onClick = {
-                navController.popBackStack("signin_screen",inclusive = false)
-                      },
+                navController.navigate(Screen.SignInScreen.route){
+                    popUpTo(Screen.SignInScreen.route){
+                        inclusive = true
+                    }
+                }
+            },
             modifier = Modifier.padding(5.dp)
 
         ) {
@@ -55,22 +60,22 @@ fun dialogContent(navController: NavController){
 }
 
 @Composable
-fun registerDialog(navController: NavController){
-        Dialog(
-            onDismissRequest = {},
-        ) {
-            Surface(
-                modifier = Modifier
-                    .width(300.dp)
-                    .wrapContentHeight(),
-                shape = RoundedCornerShape(12.dp),
-                color = Color.White
+fun registerDialog(navController: NavController) {
+    Dialog(
+        onDismissRequest = {},
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(300.dp)
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(12.dp),
+            color = Color.White
 
-            ) {
-                dialogContent(navController)
-            }
+        ) {
+            dialogContent(navController)
         }
     }
+}
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
