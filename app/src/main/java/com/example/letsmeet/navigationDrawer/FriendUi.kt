@@ -72,7 +72,7 @@ fun checkFriend(check : Boolean){
                     if (check) {
                         db.collection("users").document(AuthFireBase.email!!).update(
                             "friendlist", FieldValue.arrayUnion(_fname)).addOnSuccessListener {
-                            friends.add(_fname.toString())
+                            //friends.add(_fname.toString())
                             Log.d("SUCCESS", "친구 추가 성공")
                         }
                     }
