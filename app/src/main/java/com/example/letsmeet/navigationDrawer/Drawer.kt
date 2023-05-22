@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,10 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.letsmeet.R
 import com.example.letsmeet.authorization.AuthFireBase
+import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
 
-
-//val db = FirebaseFirestore.getInstance()
-var friends = mutableStateListOf<String>()
 
 fun addFriend(){
     val db = AuthFireBase.firestore
@@ -27,7 +26,9 @@ fun addFriend(){
         .addOnCompleteListener {  result->
             for ( document in result.result){
                 val name = document.get("friendlist").toString()
-                friends.add(name)
+                if (name != "null" || name != "[]") {
+                    friends.add(name)
+                }
             }
             Log.d("Success","성공!!")
         }
