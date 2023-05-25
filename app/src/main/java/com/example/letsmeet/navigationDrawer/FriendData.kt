@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
+import com.google.firebase.firestore.FieldValue
 
 
 class FriendData {
@@ -13,7 +14,7 @@ class FriendData {
 }
 
 
-fun rebuildFriendData(check : Boolean) {
+fun rebuildFriendData(check : Boolean, name : String) {
     val friendRequest = mutableStateListOf<String>()
     val db = AuthFireBase.firestore
     if (AuthFireBase.email != null) {
@@ -28,6 +29,9 @@ fun rebuildFriendData(check : Boolean) {
                         }
                     }
                     friendRequest.clear()
+                }
+                db.collection("users").document(name).update("friendlist",FieldValue.arrayUnion("${AuthFireBase.email}")).addOnSuccessListener {
+                    Log.d("SUCCESS","요청한 유저의 친구 목록에 현유저 추가 성공")
                 }
                 db.collection("users").document(AuthFireBase.email!!).update("friendrequest",friendRequest).addOnSuccessListener {
                     Log.d("SUCCESS","친구 승인 목록 삭제 성공")
