@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +46,7 @@ fun signIn(modifier: Modifier,navController: NavController) {
     ) {
         TextField(value = email.value,
             onValueChange = {emailValue -> email.value = emailValue},
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             label = {Text("Email")},
             modifier = modifier
                 .fillMaxWidth()
@@ -56,6 +58,7 @@ fun signIn(modifier: Modifier,navController: NavController) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = modifier
                 .fillMaxWidth()
+                .imePadding()
 
         )
         Button(onClick = { if(email.value != "" && pw.value !=" ") login(email.value,pw.value,context,navController) },

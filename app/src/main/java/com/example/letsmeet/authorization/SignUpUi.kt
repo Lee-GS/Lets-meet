@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +62,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
         TextField(value = name.value,
             onValueChange = {nameValue -> name.value = nameValue},
             label = { Text("이름") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -68,6 +70,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
         TextField(value = email.value,
             onValueChange = {emailValue -> email.value = emailValue},
             label = { Text("이메일") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -76,7 +79,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
             onValueChange = {pwValue -> pw.value = pwValue},
             label = { Text("비밀번호") },
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
             modifier = modifier
                 .fillMaxWidth()
         )
