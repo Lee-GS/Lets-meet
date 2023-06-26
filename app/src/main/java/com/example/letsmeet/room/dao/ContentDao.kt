@@ -1,11 +1,9 @@
 package com.example.letsmeet.room.dao
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
+import androidx.room.*
 import com.example.letsmeet.room.entity.ContentData
 
+@Dao
 interface ContentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertContents(vararg contentData: ContentData)
