@@ -7,9 +7,11 @@ import com.example.letsmeet.room.entity.PlanData
 @Dao
 interface FriendDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFriend(vararg friendData: FriendData)
+    suspend fun insertFriend(vararg name: String)
     @Update
-    suspend fun updateFriend(vararg friendData: FriendData)
+    suspend fun updateFriend(vararg name: String)
     @Delete
-    suspend fun deleteFriend(vararg friendData: FriendData)
+    suspend fun deleteFriend(vararg name: String)
+    @Query("SELECT * FROM friends")
+    suspend fun getAll(): ArrayList<FriendData>
 }
