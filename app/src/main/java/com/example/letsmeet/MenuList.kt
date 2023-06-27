@@ -73,7 +73,7 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
 fun requestFriend(email : String){
     AuthFireBase.firestore.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
         AuthFireBase.email)).addOnSuccessListener {
-        Log.d("SUCCESS","친구추가 전송 성공 $AuthFireBase.email")
+        Log.d("SUCCESS","친구추가 전송 성공 ${AuthFireBase.email}")
     }
 }
 
