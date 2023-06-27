@@ -29,6 +29,7 @@ import com.example.letsmeet.authorization.AuthFireBase.Companion.auth
 import com.example.letsmeet.authorization.AuthFireBase.Companion.checkAuth
 import com.example.letsmeet.authorization.AuthFireBase.Companion.email
 import com.example.letsmeet.authorization.ui.theme.LetsMeetTheme
+import com.example.letsmeet.navigationDrawer.addFriend
 
 @Composable
 fun signIn(modifier: Modifier,navController: NavController) {
@@ -82,6 +83,7 @@ fun login(email: String, password: String, context: Context,navController: NavCo
                     AuthFireBase.email=email
                     Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
                     Log.d("현재 유저:","${AuthFireBase.email}")
+                    addFriend()
                     navController.navigate(Screen.MainScreen.route){
                         popUpTo("signin_screen"){inclusive = true}
                     }
