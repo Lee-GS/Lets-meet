@@ -1,5 +1,6 @@
 package com.example.letsmeet
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -29,8 +30,15 @@ class MainActivity : ComponentActivity() {
             LetsMeetTheme {
                 val navController : NavHostController = rememberNavController()
                 Navigation(navController = navController)
-                addFriend()
             }
+        }
+        instance = this
+    }
+
+    companion object {
+        lateinit var instance: MainActivity
+        fun applicationContext() : Context {
+            return instance.applicationContext
         }
     }
 
