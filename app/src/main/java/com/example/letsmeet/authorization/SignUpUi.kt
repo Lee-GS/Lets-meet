@@ -129,7 +129,6 @@ fun register(id : String, password : String, navController: NavController, conte
                         }
                     }
                 navController.navigate(Screen.DialogScreen.route)
-                Log.d(TAG,"SUCCESS")
             }
             else{
                 Toast.makeText(context,"회원가입에 실패하였습니다.",Toast.LENGTH_SHORT).show()
