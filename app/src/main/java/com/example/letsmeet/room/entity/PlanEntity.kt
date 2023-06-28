@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "plans")
 data class PlanData(
     @PrimaryKey val date: String = " ",
-    @ColumnInfo val contents: ContentData
+    //@ColumnInfo val contents: ContentData
 )
 
