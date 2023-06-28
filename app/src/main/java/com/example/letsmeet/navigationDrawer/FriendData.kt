@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FriendData {
@@ -39,21 +40,25 @@ fun rebuildFriendData(check : Boolean, name : String) {
                             FriendDatabase.getInstance(MainActivity.instance)!!.friendDao().insertFriend(
                                 FriendData(friendRequest[i])
                             )
-                            friendRequest.clear()
+                            withContext(Dispatchers.Main){
+                                friendRequest.clear()
+                                Log.d("flag",friendRequest.toString())
+                            }
                         }
                     }
                 }
-                /*
                 db.collection("users").document(name).update("friendlist", FieldValue.arrayUnion("${AuthFireBase.email}")).addOnSuccessListener {
                     Log.d("SUCCESS","요청한 유저의 친구 목록에 현유저 추가 성공")
-                }*/
-                friendRequest.clear()
+                }
                 db.collection("users").document(AuthFireBase.email!!).update("friendrequest",friendRequest).addOnSuccessListener {
                     Log.d("SUCCESS","친구 승인 목록 삭제 성공")
                 }
-                /*db.collection("users").document(AuthFireBase.email!!).update("friendlist", friends).addOnSuccessListener {
-                    Log.d("친구 목록 업데이트 성공", friends.toString() )
-                }*/
+                for (i in 0..friends.size) {
+                    db.collection("users").document(AuthFireBase.email!!)
+                        .update("friendlist", FieldValue.arrayUnion(friends[i].name)).addOnSuccessListener {
+                        Log.d("친구 목록 업데이트 성공", friends.toString())
+                    }
+                }
                 Log.d("친구 목록", friends.toString())
             }
         }
