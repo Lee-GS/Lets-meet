@@ -83,12 +83,9 @@ fun login(email: String, password: String, context: Context,navController: NavCo
                     AuthFireBase.email=email
                     Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
                     Log.d("현재 유저:","${AuthFireBase.email}")
-                    addFriend()
                     navController.navigate(Screen.MainScreen.route){
                         popUpTo("signin_screen"){inclusive = true}
                     }
-                }else{
-
                 }
             }else{
                 Toast.makeText(context,"로그인 실패",Toast.LENGTH_SHORT).show()
