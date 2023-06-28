@@ -1,6 +1,7 @@
 package com.example.letsmeet
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
@@ -74,6 +75,7 @@ fun requestFriend(email : String){
     AuthFireBase.firestore.collection("users").document(email).update("friendrequest", FieldValue.arrayUnion(
         AuthFireBase.email)).addOnSuccessListener {
         Log.d("SUCCESS","친구추가 전송 성공 ${AuthFireBase.email}")
+        Toast.makeText(MainActivity.applicationContext(),"친구요청을 보냈습니다!",Toast.LENGTH_SHORT).show()
     }
 }
 
