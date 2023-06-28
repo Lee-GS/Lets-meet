@@ -1,12 +1,14 @@
 package com.example.letsmeet.navigationDrawer
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.example.letsmeet.MyApplication
+import com.example.letsmeet.MainActivity
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
 import com.example.letsmeet.room.database.FriendDatabase
+import com.example.letsmeet.room.entity.FriendData
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,33 +17,37 @@ import kotlinx.coroutines.launch
 
 class FriendData {
     companion object{
-        val friends = mutableStateListOf<com.example.letsmeet.room.entity.FriendData>()
+        lateinit var friends : ArrayList<com.example.letsmeet.room.entity.FriendData>
     }
 }
 
 
 fun rebuildFriendData(check : Boolean, name : String) {
-    var friendRequest = SnapshotStateList<String>()
+    var friendRequest : ArrayList<String>
     val db = AuthFireBase.firestore
     if (AuthFireBase.email != null) {
         db.collection("users").document(AuthFireBase.email!!).get().addOnSuccessListener { document ->
             if (document != null) {
-                friendRequest = document.get("friendrequest") as SnapshotStateList<String>
-                Log.d("Succcess", friendRequest.toString())
-                if (check) {
+                Log.d("친구요청 한 사람", "${document.get("friendrequest")}")
+                friendRequest= document.get("friendrequest") as ArrayList<String>
+                Log.d("친구요청 목록", "${friendRequest}")
+                Log.d("친구요청 목록 사이즈","${friendRequest.size}")
+                if (check && friendRequest.isNotEmpty()) {
                     for (i in 0 until friendRequest.size){
-                        if (friendRequest[i] != "[]"||friendRequest[i]!="null") {
-                            CoroutineScope(Dispatchers.IO).launch{
-                                FriendDatabase.getInstance(MyApplication.instance)!!.friendDao().insertFriend(friendRequest[i])
-                            }
-
+                        CoroutineScope(Dispatchers.IO).launch{
+                            Log.d("room db 삽입",friendRequest[i])
+                            FriendDatabase.getInstance(MainActivity.instance)!!.friendDao().insertFriend(
+                                FriendData(friendRequest[i])
+                            )
+                            friendRequest.clear()
                         }
                     }
-                    friendRequest.clear()
                 }
-                /*db.collection("users").document(name).update("friendlist",FieldValue.arrayUnion("${AuthFireBase.email}")).addOnSuccessListener {
+                /*
+                db.collection("users").document(name).update("friendlist", FieldValue.arrayUnion("${AuthFireBase.email}")).addOnSuccessListener {
                     Log.d("SUCCESS","요청한 유저의 친구 목록에 현유저 추가 성공")
                 }*/
+                friendRequest.clear()
                 db.collection("users").document(AuthFireBase.email!!).update("friendrequest",friendRequest).addOnSuccessListener {
                     Log.d("SUCCESS","친구 승인 목록 삭제 성공")
                 }
