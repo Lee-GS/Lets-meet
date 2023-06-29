@@ -67,9 +67,9 @@ fun MainUi() {
         LaunchedEffect(AuthFireBase.email) {
             AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get().addOnSuccessListener { document ->
                 if (document != null) {
-                    val _fname = document.get("friendrequest")
+                    val _fname = document.get("friendrequest") as ArrayList<String>
                     Log.d("~~",_fname.toString())
-                    fname = _fname.toString()
+                    fname = _fname[0]
                     Log.d("친구추가 보낸사람", fname)
                 }
             }
