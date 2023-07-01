@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.letsmeet.MainActivity
 import com.example.letsmeet.R
+import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
 import com.example.letsmeet.room.database.FriendDatabase
 import com.example.letsmeet.room.entity.FriendData
@@ -23,10 +24,20 @@ import kotlinx.coroutines.launch
 
 
 fun addFriend(){
-    val db = FriendDatabase.getInstance(MainActivity.applicationContext())
-    CoroutineScope(Dispatchers.IO).launch {
-        friends = db!!.friendDao().getAll() as ArrayList<FriendData>
-        Log.d("친구 목록","$friends")
+    CoroutineScope(Dispatchers.IO).launch{
+        AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val name = document.get("friendlist")
+                    if (name != null) {
+                        name as ArrayList<String>
+                        for (element in name) {
+                            Log.d("친구 리스트 추가", element)
+                            friends.add(element)
+                        }
+                    }
+                }
+            }
     }
 }
 
@@ -47,7 +58,7 @@ fun FriendList(modifier: Modifier) {
         )
         {
             items(friends) {
-                item: FriendData -> Text(text = item.name )
+                item -> Text(text = item)
             }
         }
     }
