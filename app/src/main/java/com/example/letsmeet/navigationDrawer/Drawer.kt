@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,8 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-fun addFriend(){
-    CoroutineScope(Dispatchers.IO).launch{
+fun addFriend() {
+    CoroutineScope(Dispatchers.IO).launch {
         AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -44,8 +44,10 @@ fun addFriend(){
 
 @Composable
 fun FriendList(modifier: Modifier) {
-    Log.d("drawer","flag")
     addFriend()
+    val friends = remember {
+        friends
+    }
     Column(
         modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,10 +57,11 @@ fun FriendList(modifier: Modifier) {
             contentDescription = "App Icon",
         )
         LazyColumn(
+            state = LazyListState()
         )
         {
             items(friends) {
-                item -> Text(text = item)
+                    item -> Text(text = item)
             }
         }
     }
