@@ -1,5 +1,6 @@
 package com.example.letsmeet.mainScreen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,13 +26,17 @@ import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.ui.theme.Purple40
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.rpc.context.AttributeContext.Auth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
+    var fname = remember { mutableStateListOf<String>() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var fname by remember { mutableStateOf("") }
     var opendialog by remember { mutableStateOf(false) }
     var openfloating by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
@@ -52,7 +57,7 @@ fun MainUi() {
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { openfloating =true },
+                    onClick = { openfloating = true },
                     content = {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                     }
@@ -61,41 +66,43 @@ fun MainUi() {
 
 
         )
-    }
-
-    if (AuthFireBase.email != null) {
-        LaunchedEffect(AuthFireBase.email) {
-            AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get().addOnSuccessListener { document ->
+    LaunchedEffect(AuthFireBase.email) {
+        AuthFireBase.firestore.collection("users").document(AuthFireBase.email!!).get()
+            .addOnSuccessListener { document ->
                 if (document != null) {
                     val _fname = document.get("friendrequest") as ArrayList<String>
-                    Log.d("~~",_fname.toString())
-                    fname = _fname[0]
-                    Log.d("친구추가 보낸사람", fname)
+                    for (element in _fname) {
+                        fname.add(element)
+                        Log.d("fr1", fname.toString())
+                    }
                 }
+            }
+    }
+        if (fname.isNotEmpty()) {
+            opendialog = true
+            for (i in 0 until fname.size) {
+                if (opendialog){
+                    acceptFriend(fname[i]) {
+                        opendialog = false
+                        fname.remove(fname[i])
+                    }
+                }
+            }
+
+        }
+
+        if (openfloating) {
+            addPlanList {
+                openfloating = false
             }
         }
     }
-    if (fname.length > 3){
-        opendialog=true
-    }
-    if(opendialog){
-        acceptFriend(fname) {
-            fname = ""
-            opendialog = false
-        }
-    }
-    if (openfloating){
-        addPlanList {
-            openfloating = false
-        }
-    }
-
 
 
 }
 
 @Composable
-fun addPlanList(onChange : () -> Unit){
+fun addPlanList(onChange: () -> Unit) {
     var num = remember {
         mutableStateOf(1)
     }
@@ -204,7 +211,6 @@ fun PlanList(count: MutableState<Int>) {
         }
     }
 }
-
 
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
