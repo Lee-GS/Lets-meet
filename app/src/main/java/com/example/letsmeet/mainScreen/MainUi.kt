@@ -15,12 +15,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.letsmeet.MainActivity
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
+import com.example.letsmeet.room.database.ContentDatabase
+import com.example.letsmeet.room.database.FriendDatabase
+import com.example.letsmeet.room.entity.ContentData
+import com.example.letsmeet.room.entity.FriendData
 import com.example.letsmeet.ui.theme.Purple40
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +39,7 @@ fun MainUi() {
     val scope = rememberCoroutineScope()
     var opendialog by remember { mutableStateOf(false) }
     var openfloating by remember { mutableStateOf(false) }
+    val flag = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -46,7 +54,7 @@ fun MainUi() {
                 )
                 {
                     items(3) {
-                        PlanList(count)
+                        PlanList(count,flag)
                     }
                 }
             },
@@ -87,7 +95,7 @@ fun MainUi() {
         }
 
         if (openfloating) {
-            addPlanList {
+            addPlanList(flag) {
                 openfloating = false
             }
         }
@@ -97,10 +105,11 @@ fun MainUi() {
 }
 
 @Composable
-fun addPlanList(onChange: () -> Unit) {
-    var num = remember {
+fun addPlanList(flag : MutableState<Boolean> ,onChange: () -> Unit) {
+    val num = remember {
         mutableStateOf(1)
     }
+
     AlertDialog(
         onDismissRequest = { onChange() },
         title = {
@@ -121,10 +130,14 @@ fun addPlanList(onChange: () -> Unit) {
             }
         },
         text = {
-            PlanList(num)
+            PlanList(num,flag)
         },
         confirmButton = {
-            TextButton(onClick = { onChange() }) {
+            TextButton(onClick = {
+                flag.value = true
+                flag.value = false
+                onChange()
+            }) {
                 Text(text = "추가")
             }
         },
@@ -138,7 +151,7 @@ fun addPlanList(onChange: () -> Unit) {
 
 
 @Composable
-fun TimeLine(modifier: Modifier) {
+fun TimeLine(modifier: Modifier, flag : MutableState<Boolean>) {
     val time = rememberSaveable {
         mutableStateOf("")
     }
@@ -153,22 +166,35 @@ fun TimeLine(modifier: Modifier) {
         TextField(
             value = time.value,
             onValueChange = { timeValue -> time.value = timeValue },
-            label = { Text("시간") },
+            placeholder =  { Text("시간") },
             modifier = modifier.width(100.dp)
         )
         TextField(
             value = plan.value,
             onValueChange = {  planValue -> plan.value = planValue  },
-            label = { Text("계획", textAlign = TextAlign.Center) },
+            placeholder = { Text("계획", textAlign = TextAlign.Center) },
             modifier = modifier.width(250.dp)
         )
+    }
+    if (flag.value) {
+        LaunchedEffect(time) {
+            CoroutineScope(Dispatchers.IO).launch {
+                Log.d("room db 삽입", time.toString() + plan.toString())
+                ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
+                    .insertPlan(
+                        ContentData(time.toString()),
+                        ContentData(plan.toString())
+                    )
+            }
+
+        }
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanList(count: MutableState<Int>) {
+fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
     val date = rememberSaveable {
         mutableStateOf("")
     }
@@ -192,8 +218,20 @@ fun PlanList(count: MutableState<Int>) {
                     .height(150.dp)
             ) {
                 items(count.value) {
-                    TimeLine(modifier = Modifier.padding(1.dp))
+                    TimeLine(modifier = Modifier.padding(1.dp), flag)
                 }
+            }
+        }
+        if (flag.value) {
+            LaunchedEffect(date) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    Log.d("room db 삽입", date.toString())
+                    ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
+                        .insertDate(
+                            ContentData(date.toString())
+                        )
+                }
+
             }
         }
     }
@@ -208,14 +246,20 @@ fun MainUiPreview() {
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun addPlanListPreview() {
-    addPlanList { }
+fun AddPlanListPreview() {
+    val arg  = remember {
+        mutableStateOf(false)
+    }
+    addPlanList(arg) { }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun TimeLinePreview() {
-   // TimeLine(modifier = Modifier.padding(8.dp),"123","123")
+    val arg  = remember {
+        mutableStateOf(false)
+    }
+   TimeLine(modifier = Modifier.padding(8.dp),arg)
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -224,5 +268,8 @@ fun PlanListPreview() {
     val arg  = remember {
         mutableStateOf(3)
     }
-    PlanList(arg)
+    val arg2  = remember {
+        mutableStateOf(false)
+    }
+    PlanList(arg,arg2)
 }
