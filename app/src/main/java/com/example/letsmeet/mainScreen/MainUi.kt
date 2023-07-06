@@ -15,25 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.letsmeet.MainActivity
 import com.example.letsmeet.navigationDrawer.FriendList
 import com.example.letsmeet.MyAppBar
-import com.example.letsmeet.Screen
 import com.example.letsmeet.authorization.AuthFireBase
 import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.ui.theme.Purple40
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.rpc.context.AttributeContext.Auth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
+    val count =  remember { mutableStateOf(3) }
     var fname = remember { mutableStateListOf<String>() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -52,7 +45,9 @@ fun MainUi() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    //items(5) { PlanList() }
+                    items(3) {
+                        PlanList(count)
+                    }
                 }
             },
             floatingActionButton = {
@@ -147,16 +142,12 @@ fun TimeLine(modifier: Modifier) {
     val time = rememberSaveable {
         mutableStateOf("")
     }
-    val place = rememberSaveable {
-        mutableStateOf("")
-    }
     val plan = rememberSaveable {
         mutableStateOf("")
     }
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround,
     )
     {
         TextField(
@@ -166,19 +157,14 @@ fun TimeLine(modifier: Modifier) {
             modifier = modifier.width(100.dp)
         )
         TextField(
-            value = place.value,
-            onValueChange = { placeValue -> place.value = placeValue },
-            label = { Text("장소") },
-            modifier = modifier.width(100.dp)
-        )
-        TextField(
             value = plan.value,
-            onValueChange = { planValue -> plan.value = planValue },
-            label = { Text("계획") },
-            modifier = modifier.width(100.dp)
+            onValueChange = {  planValue -> plan.value = planValue  },
+            label = { Text("계획", textAlign = TextAlign.Center) },
+            modifier = modifier.width(250.dp)
         )
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -186,6 +172,7 @@ fun PlanList(count: MutableState<Int>) {
     val date = rememberSaveable {
         mutableStateOf("")
     }
+
     Card(modifier = Modifier.padding(8.dp)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -205,7 +192,7 @@ fun PlanList(count: MutableState<Int>) {
                     .height(150.dp)
             ) {
                 items(count.value) {
-                    TimeLine(modifier = Modifier)
+                    TimeLine(modifier = Modifier.padding(1.dp))
                 }
             }
         }
@@ -228,11 +215,14 @@ fun addPlanListPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun TimeLinePreview() {
-    TimeLine(modifier = Modifier.padding(8.dp))
+   // TimeLine(modifier = Modifier.padding(8.dp),"123","123")
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun PlanListPreview() {
-    //PlanList(1)
+    val arg  = remember {
+        mutableStateOf(3)
+    }
+    PlanList(arg)
 }
