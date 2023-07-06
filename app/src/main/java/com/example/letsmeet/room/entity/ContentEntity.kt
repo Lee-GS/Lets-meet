@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "contents")
 data class ContentData(
-    @PrimaryKey val time: String = " ",
+    @PrimaryKey val date: String = " ",
+    @ColumnInfo val time: String = " ",
     @ColumnInfo val plan: String = " "
 )
