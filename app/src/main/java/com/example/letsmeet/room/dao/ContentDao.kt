@@ -6,9 +6,10 @@ import com.example.letsmeet.room.entity.ContentData
 @Dao
 interface ContentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertContents(vararg contentData: ContentData)
+    suspend fun insertContents(contentData: ContentData)
     @Update
-    suspend fun updateContents(vararg contentData: ContentData)
+
+    suspend fun updateContents(contentData: ContentData)
     @Delete
-    suspend fun deleteContents(vararg contentData: ContentData)
+    suspend fun deleteContents(contentData: ContentData)
 }
