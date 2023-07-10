@@ -7,9 +7,7 @@ import com.example.letsmeet.room.entity.FriendData
 @Dao
 interface ContentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDate(date : ContentData)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlan(time : ContentData, plan : ContentData)
+    suspend fun insertDate(contentData : ContentData)
     @Update
     suspend fun updateContents(contentData: ContentData)
     @Delete
