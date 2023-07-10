@@ -136,6 +136,7 @@ fun addPlanList(flag : MutableState<Boolean> ,onChange: () -> Unit) {
             TextButton(onClick = {
                 flag.value = true
                 flag.value = false
+                getContents()
                 onChange()
             }) {
                 Text(text = "추가")
@@ -179,7 +180,7 @@ fun TimeLine(modifier: Modifier, flag : MutableState<Boolean>) {
     if (flag.value) {
         LaunchedEffect(time) {
             CoroutineScope(Dispatchers.IO).launch {
-                Log.d("room db 삽입", time.toString() + plan.toString())
+                Log.d("room db 삽입 시간,계획", time.toString() + plan.toString())
                 ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
                     .insertPlan(
                         ContentData(time.toString()),
@@ -225,7 +226,7 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
         if (flag.value) {
             LaunchedEffect(date) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    Log.d("room db 삽입", date.toString())
+                    Log.d("room db 삽입 날짜", date.toString())
                     ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
                         .insertDate(
                             ContentData(date.toString())
@@ -234,6 +235,16 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
 
             }
         }
+    }
+}
+
+
+fun getContents(){
+    val db = ContentDatabase.getInstance(MainActivity.applicationContext())
+    var contents : ArrayList<ContentData>
+    CoroutineScope(Dispatchers.IO).launch {
+        contents = db!!.contentDao().getAll() as ArrayList<ContentData>
+        Log.d("친구 목록","$contents")
     }
 }
 
