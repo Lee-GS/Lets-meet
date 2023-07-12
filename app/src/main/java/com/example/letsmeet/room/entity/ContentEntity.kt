@@ -5,9 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "contents")
+@Entity(tableName = "contents2")
 data class ContentData(
     @PrimaryKey val date: String = " ",
-    @ColumnInfo val time: List<String>,
-    @ColumnInfo val plan: List<String>
+    @ColumnInfo val time: List<String>?,
+    @ColumnInfo val plan: List<String>?
 )

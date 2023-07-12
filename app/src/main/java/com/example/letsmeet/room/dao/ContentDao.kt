@@ -13,6 +13,6 @@ interface ContentDao {
     @Delete
     suspend fun deleteContents(contentData: ContentData)
 
-    @Query("SELECT * FROM contents")
+    @Query("SELECT * FROM contents2")
     suspend fun getAll(): List<ContentData>
 }
