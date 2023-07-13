@@ -21,7 +21,7 @@ abstract class ContentDatabase : RoomDatabase() {
                         instance = Room.databaseBuilder(
                             context.applicationContext,
                             ContentDatabase::class.java,
-                            "content2.db"
+                            "content3.db"
                         ).build()
                     }
                 }
