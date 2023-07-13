@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -23,22 +25,24 @@ import com.example.letsmeet.navigationDrawer.acceptFriend
 import com.example.letsmeet.room.database.ContentDatabase
 import com.example.letsmeet.room.entity.ContentData
 import com.example.letsmeet.ui.theme.Purple40
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
     val count = remember { mutableStateOf(0) }
     var fname = remember { mutableStateListOf<String>() }
+    val flag = remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val contentsDeffered = scope.async(Dispatchers.IO) {
+        getContents()
+    }
+    val contents = runBlocking { contentsDeffered.await() }
     val opendialog = remember { mutableStateOf(false) }
     val openfloating = remember { mutableStateOf(false) }
-    val flag = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -52,8 +56,8 @@ fun MainUi() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    items(0) {
-                        PlanList(count, flag)
+                    items(contents) { it ->
+                        MainPlanList(it)
                     }
                 }
             },
@@ -102,7 +106,33 @@ fun MainUi() {
 
 
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainPlanList(contents : ContentData){
+    Card(modifier = Modifier.padding(8.dp)) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(Purple40)
+                .padding(8.dp)
+        ) {
+            Text(text = contents.date, modifier = Modifier.width(100.dp))
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+            ) {
+                items(contents.time){it ->
+                    Text(text = it)
+                }
+                items(contents.plan){it ->
+                    Text(text = it)
+                }
+            }
+        }
 
+    }
+}
 @Composable
 fun addPlanList(flag: MutableState<Boolean>, onChange: () -> Unit) {
     val num = remember {
@@ -134,9 +164,9 @@ fun addPlanList(flag: MutableState<Boolean>, onChange: () -> Unit) {
         confirmButton = {
             TextButton(onClick = {
                 flag.value = true
-                Log.d("value1", flag.toString())
                 CoroutineScope(Dispatchers.IO).launch {
-                    getContents(flag)
+                    delay(2000L)
+                    flag.value = false
                 }
                 onChange()
             }) {
@@ -183,7 +213,6 @@ fun TimeLine(
             modifier = modifier.width(250.dp)
         )
     }
-    Log.d("time1", time.value)
     if (flag.value) {
         timeList.add(time.value)
         planList.add((plan.value))
@@ -231,14 +260,11 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
                     TimeLine(modifier = Modifier.padding(1.dp), flag, timeList, planList)
                 }
             }
-            Log.d("날짜1", date.value)
-            Log.d("tl,pl1", (timeList + planList).toList().toString())
         }
-        Log.d("tl,pl2", (timeList + planList).toList().toString())
         if (flag.value) {
             CoroutineScope(Dispatchers.IO).launch {
                 delay(1000L)
-                Log.d("room db 삽입 날짜", date.value + " " +timeList.toList() +" "+ planList.toList())
+                Log.d("room db 삽입 날짜", date.value + " " + timeList.toList() +" "+ planList.toList())
                 ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
                     .insertDate(
                         ContentData(date.value, timeList, planList)
@@ -251,13 +277,12 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
 
 
 
-suspend fun getContents(flag: MutableState<Boolean>) {
+suspend fun getContents(): List<ContentData> {
     delay(2000L)
     val db = ContentDatabase.getInstance(MainActivity.applicationContext())
-    val contents = db!!.contentDao().getAll() as ArrayList<ContentData>
-    flag.value = false
+    val contents = db!!.contentDao().getAll()
     Log.d("contents", "$contents")
-
+    return contents
 }
 
 
@@ -297,4 +322,11 @@ fun PlanListPreview() {
         mutableStateOf(false)
     }
     PlanList(arg, arg2)
+}
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun MainPlanList(){
+    val a = listOf<String>("123","345")
+    val b = listOf<String>("123","345")
+    MainPlanList(ContentData("!23",a,b))
 }
