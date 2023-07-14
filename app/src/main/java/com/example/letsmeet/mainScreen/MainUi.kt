@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,8 +41,8 @@ fun MainUi() {
         getContents()
     }
     val contents = runBlocking { contentsDeffered.await() }
-    val opendialog = remember { mutableStateOf(false) }
-    val openfloating = remember { mutableStateOf(false) }
+    val openDialog = remember { mutableStateOf(false) }
+    val openFloating = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
         drawerContent = { FriendList(modifier = Modifier) },
         drawerState = drawerState
@@ -63,7 +63,7 @@ fun MainUi() {
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { openfloating.value = true },
+                    onClick = { openFloating.value = true },
                     content = {
                         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                     }
@@ -85,11 +85,11 @@ fun MainUi() {
                 }
         }
         if (fname.isNotEmpty()) {
-            opendialog.value = true
+            openDialog.value = true
             for (i in 0 until fname.size) {
-                if (opendialog.value) {
+                if (openDialog.value) {
                     acceptFriend(fname[i]) {
-                        opendialog.value = false
+                        openDialog.value = false
                         fname.remove(fname[i])
                     }
                 }
@@ -97,18 +97,22 @@ fun MainUi() {
 
         }
 
-        if (openfloating.value) {
+        if (openFloating.value) {
             addPlanList(flag) {
-                openfloating.value = false
+                openFloating.value = false
             }
         }
     }
 
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainPlanList(contents : ContentData){
+fun MainPlanList(contents: ContentData) {
+    val combinedList = contents.time.zip(contents.plan) { time, plan ->
+        time to plan
+    }
     Card(modifier = Modifier.padding(8.dp)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -116,23 +120,34 @@ fun MainPlanList(contents : ContentData){
                 .background(Purple40)
                 .padding(8.dp)
         ) {
-            Text(text = contents.date, modifier = Modifier.width(100.dp))
+            Text(text = contents.date, color = Color.White, textAlign = TextAlign.Center)
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(150.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(contents.time){it ->
-                    Text(text = it)
-                }
-                items(contents.plan){it ->
-                    Text(text = it)
+                items(combinedList) { (time, plan) ->
+                    Row {
+                        Text(
+                            text = time,
+                            color = Color.White,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+                        Text(
+                            text = plan,
+                            color = Color.Green,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center)
+                    }
                 }
             }
-        }
 
+        }
     }
 }
+
 @Composable
 fun addPlanList(flag: MutableState<Boolean>, onChange: () -> Unit) {
     val num = remember {
@@ -264,7 +279,10 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
         if (flag.value) {
             CoroutineScope(Dispatchers.IO).launch {
                 delay(1000L)
-                Log.d("room db 삽입 날짜", date.value + " " + timeList.toList() +" "+ planList.toList())
+                Log.d(
+                    "room db 삽입 날짜",
+                    date.value + " " + timeList.toList() + " " + planList.toList()
+                )
                 ContentDatabase.getInstance(MainActivity.instance)!!.contentDao()
                     .insertDate(
                         ContentData(date.value, timeList, planList)
@@ -274,7 +292,6 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
         }
     }
 }
-
 
 
 suspend fun getContents(): List<ContentData> {
@@ -323,10 +340,11 @@ fun PlanListPreview() {
     }
     PlanList(arg, arg2)
 }
+
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
-fun MainPlanList(){
-    val a = listOf<String>("123","345")
-    val b = listOf<String>("123","345")
-    MainPlanList(ContentData("!23",a,b))
+fun MainPlanList() {
+    val a = listOf<String>("123", "345")
+    val b = listOf<String>("123", "345")
+    MainPlanList(ContentData("!23", a, b))
 }
