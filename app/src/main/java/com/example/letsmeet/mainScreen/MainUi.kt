@@ -11,12 +11,15 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.letsmeet.MainActivity
 import com.example.letsmeet.MyAppBar
 import com.example.letsmeet.authorization.AuthFireBase
@@ -32,7 +35,6 @@ import kotlinx.coroutines.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
-    val count = remember { mutableStateOf(0) }
     var fname = remember { mutableStateListOf<String>() }
     val flag = remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -40,7 +42,9 @@ fun MainUi() {
     val contentsDeffered = scope.async(Dispatchers.IO) {
         getContents()
     }
-    val contents = runBlocking { contentsDeffered.await() }
+    val _contents = runBlocking { contentsDeffered.await() }
+    val contents = remember { mutableStateListOf<ContentData>() }
+    for(i in _contents){ contents.add(i) }
     val openDialog = remember { mutableStateOf(false) }
     val openFloating = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
@@ -56,7 +60,7 @@ fun MainUi() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
                 {
-                    items(contents) { it ->
+                    items(contents) {
                         MainPlanList(it)
                     }
                 }
@@ -79,7 +83,6 @@ fun MainUi() {
                         val _fname = document.get("friendrequest") as ArrayList<String>
                         for (element in _fname) {
                             fname.add(element)
-                            Log.d("fr1", fname.toString())
                         }
                     }
                 }
@@ -98,7 +101,7 @@ fun MainUi() {
         }
 
         if (openFloating.value) {
-            addPlanList(flag) {
+            addPlanList(contents,flag){
                 openFloating.value = false
             }
         }
@@ -120,7 +123,7 @@ fun MainPlanList(contents: ContentData) {
                 .background(Purple40)
                 .padding(8.dp)
         ) {
-            Text(text = contents.date, color = Color.White, textAlign = TextAlign.Center)
+            Text(text = contents.date, color = Color.White, textAlign = TextAlign.Center, fontSize = 25.sp)
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
@@ -133,13 +136,16 @@ fun MainPlanList(contents: ContentData) {
                             text = time,
                             color = Color.White,
                             modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
                         )
                         Text(
                             text = plan,
                             color = Color.Green,
                             modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center)
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp
+                        )
                     }
                 }
             }
@@ -149,7 +155,7 @@ fun MainPlanList(contents: ContentData) {
 }
 
 @Composable
-fun addPlanList(flag: MutableState<Boolean>, onChange: () -> Unit) {
+fun addPlanList(contents: SnapshotStateList<ContentData>,flag: MutableState<Boolean>, onChange: () -> Unit,) {
     val num = remember {
         mutableStateOf(1)
     }
@@ -174,7 +180,7 @@ fun addPlanList(flag: MutableState<Boolean>, onChange: () -> Unit) {
             }
         },
         text = {
-            PlanList(num, flag)
+            PlanList(num, flag, contents)
         },
         confirmButton = {
             TextButton(onClick = {
@@ -202,7 +208,7 @@ fun TimeLine(
     modifier: Modifier,
     flag: MutableState<Boolean>,
     timeList: MutableList<String>,
-    planList: MutableList<String>
+    planList: MutableList<String>,
 ) {
     val time = rememberSaveable {
         mutableStateOf("")
@@ -242,7 +248,7 @@ fun TimeLine(
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
+fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>, contents: SnapshotStateList<ContentData>) {
     val date = rememberSaveable {
         mutableStateOf("")
     }
@@ -288,7 +294,7 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>) {
                         ContentData(date.value, timeList, planList)
                     )
             }
-
+            contents.add(ContentData(date.value, timeList, planList))
         }
     }
 }
@@ -315,7 +321,7 @@ fun AddPlanListPreview() {
     val arg = remember {
         mutableStateOf(false)
     }
-    addPlanList(arg) { }
+    //addPlanList(arg) { }
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -338,7 +344,7 @@ fun PlanListPreview() {
     val arg2 = remember {
         mutableStateOf(false)
     }
-    PlanList(arg, arg2)
+   // PlanList(arg, arg2)
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
