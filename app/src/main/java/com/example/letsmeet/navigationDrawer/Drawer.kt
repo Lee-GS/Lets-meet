@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.letsmeet.MainActivity
 import com.example.letsmeet.R
 import com.example.letsmeet.authorization.AuthFireBase
-import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
+import com.example.letsmeet.navigationDrawer.FriendData.friends
 import com.example.letsmeet.room.database.FriendDatabase
 import com.example.letsmeet.room.entity.FriendData
 import kotlinx.coroutines.CoroutineScope

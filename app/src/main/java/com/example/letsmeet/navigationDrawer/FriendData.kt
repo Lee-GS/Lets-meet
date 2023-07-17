@@ -8,21 +8,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.example.letsmeet.MainActivity
 import com.example.letsmeet.authorization.AuthFireBase
-import com.example.letsmeet.navigationDrawer.FriendData.Companion.friends
+import com.example.letsmeet.navigationDrawer.FriendData.friends
 import com.example.letsmeet.room.database.FriendDatabase
 import com.example.letsmeet.room.entity.FriendData
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.LinkedList
 
 
-class FriendData {
-    companion object {
-        val friends = mutableStateListOf<String>()
-    }
+object FriendData {
+    val friends = mutableStateListOf<String>()
 }
 
 
