@@ -45,7 +45,7 @@ fun MainUi() {
     }
     val _contents = runBlocking { contentsDeffered.await() }
     val contents = remember { mutableStateListOf<ContentData>() }
-    for(i in _contents){ contents.add(i) }
+    for(i in _contents.reversed()){ contents.add(i) }
     val openDialog = remember { mutableStateOf(false) }
     val openFloating = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
