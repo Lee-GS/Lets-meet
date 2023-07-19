@@ -1,6 +1,7 @@
 package com.example.letsmeet.mainScreen
 
 import android.annotation.SuppressLint
+import android.opengl.Visibility
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.letsmeet.MainActivity
@@ -35,7 +35,8 @@ import kotlinx.coroutines.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainUi() {
-    var fname = remember { mutableStateListOf<String>() }
+    val fname = remember { mutableStateListOf<String>() }
+    val visible = remember { mutableStateOf(false) }
     val flag = remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -52,7 +53,7 @@ fun MainUi() {
         drawerState = drawerState
     ) {
         Scaffold(
-            topBar = { MyAppBar(drawerState, scope) },
+            topBar = { MyAppBar(drawerState, scope, visible) },
             content = { innerPadding ->
                 LazyColumn(
                     Modifier.fillMaxWidth(),
@@ -61,7 +62,7 @@ fun MainUi() {
                 )
                 {
                     items(contents) {
-                        MainPlanList(it)
+                        MainPlanList(it,visible)
                     }
                 }
             },
@@ -112,18 +113,37 @@ fun MainUi() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainPlanList(contents: ContentData) {
+fun MainPlanList(contents: ContentData, visible : MutableState<Boolean>) {
     val combinedList = contents.time.zip(contents.plan) { time, plan ->
         time to plan
     }
+    var ischeked = rememberSaveable {
+        mutableStateOf(false)
+    }
     Card(modifier = Modifier.padding(8.dp)) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .background(Purple40)
                 .padding(8.dp)
         ) {
-            Text(text = contents.date, color = Color.White, textAlign = TextAlign.Center, fontSize = 25.sp)
+            Row() {
+                Text(
+                    text = contents.date,
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    modifier = Modifier.padding(start = 165.dp)
+
+                )
+                if(visible.value) {
+                    Checkbox(
+                        checked = ischeked.value,
+                        onCheckedChange = {ischeked.value = it},
+                        //colors = CheckboxDefaults.colors(Color.LightGray),
+                        modifier = Modifier
+                            .padding(start = 110.dp)
+                    )
+                }
+            }
             LazyColumn(
                 Modifier
                     .fillMaxWidth()
@@ -352,5 +372,8 @@ fun PlanListPreview() {
 fun MainPlanList() {
     val a = listOf<String>("123", "345")
     val b = listOf<String>("123", "345")
-    MainPlanList(ContentData("!23", a, b))
+    val c = remember {
+        mutableStateOf<Boolean>(true)
+    }
+    MainPlanList(ContentData("!23", a, b),c)
 }

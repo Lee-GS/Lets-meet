@@ -23,7 +23,7 @@ import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
+fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope, visible : MutableState<Boolean>) {
     var isDropDownMenuExpanded by remember {
         mutableStateOf(false)
     }
@@ -51,6 +51,7 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope) {
                 DropdownMenuItem(
                     text = { Text(text = "공유하기") },
                     onClick = {
+                        visible.value = true
                         isDropDownMenuExpanded = false
                     }
                 )
