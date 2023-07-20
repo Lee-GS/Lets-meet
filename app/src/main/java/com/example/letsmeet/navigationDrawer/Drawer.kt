@@ -43,13 +43,13 @@ fun addFriend() {
 
 
 @Composable
-fun FriendList(modifier: Modifier) {
+fun FriendList() {
     addFriend()
     val friends = remember {
         friends
     }
     Column(
-        modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -70,6 +70,6 @@ fun FriendList(modifier: Modifier) {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun FriendListPreview() {
-    FriendList(modifier = Modifier)
+    FriendList()
 }
 
