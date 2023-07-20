@@ -24,10 +24,10 @@ import kotlin.reflect.typeOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope, visible : MutableState<Boolean>) {
-    var isDropDownMenuExpanded by remember {
+    val isDropDownMenuExpanded = remember {
         mutableStateOf(false)
     }
-    var opendialog by remember {
+    val opendialog = remember {
         mutableStateOf(false)
     }
     CenterAlignedTopAppBar(
@@ -39,35 +39,35 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope, visible : MutableS
         },
         actions = {
             IconButton(onClick = {
-                isDropDownMenuExpanded = !isDropDownMenuExpanded
+                isDropDownMenuExpanded.value = !isDropDownMenuExpanded.value
             }) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
             DropdownMenu(
-                expanded = isDropDownMenuExpanded,
-                onDismissRequest = { isDropDownMenuExpanded = false },
+                expanded = isDropDownMenuExpanded.value,
+                onDismissRequest = { isDropDownMenuExpanded.value = false },
                 modifier = Modifier.wrapContentSize()
             ) {
                 DropdownMenuItem(
                     text = { Text(text = "공유하기") },
                     onClick = {
-                        visible.value = true
-                        isDropDownMenuExpanded = false
+                        visible.value = !visible.value
+                        isDropDownMenuExpanded.value = false
                     }
                 )
                 DropdownMenuItem(
                     text = { Text(text = "친구추가 하기") },
                     onClick = {
-                        opendialog = true
-                        isDropDownMenuExpanded = false
+                        opendialog.value = true
+                        isDropDownMenuExpanded.value = false
                     }
                 )
             }
         }
     )
-    if (opendialog) {
+    if (opendialog.value) {
         AddFriendsDialog()
-        { opendialog = false }
+        { opendialog.value = false }
     }
 
 }
