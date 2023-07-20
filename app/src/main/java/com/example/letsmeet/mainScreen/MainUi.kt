@@ -49,7 +49,7 @@ fun MainUi() {
     val openDialog = remember { mutableStateOf(false) }
     val openFloating = remember { mutableStateOf(false) }
     ModalNavigationDrawer(
-        drawerContent = { FriendList(modifier = Modifier) },
+        drawerContent = { FriendList() },
         drawerState = drawerState
     ) {
         Scaffold(
@@ -314,7 +314,7 @@ fun PlanList(count: MutableState<Int>, flag: MutableState<Boolean>, contents: Sn
                         ContentData(date.value, timeList, planList)
                     )
             }
-            contents.add(ContentData(date.value, timeList, planList))
+            contents.add(0,ContentData(date.value, timeList, planList))
         }
     }
 }
