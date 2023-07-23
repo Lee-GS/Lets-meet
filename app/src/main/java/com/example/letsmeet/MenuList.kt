@@ -2,9 +2,13 @@ package com.example.letsmeet
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
@@ -12,13 +16,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.example.letsmeet.authorization.AuthFireBase
+import com.example.letsmeet.navigationDrawer.FriendData
 import com.google.firebase.firestore.FieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.reflect.typeOf
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +34,10 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope, visible : MutableS
     val isDropDownMenuExpanded = remember {
         mutableStateOf(false)
     }
-    val opendialog = remember {
+    val openFriendDialog = remember {
+        mutableStateOf(false)
+    }
+    val openContentsDialog = remember {
         mutableStateOf(false)
     }
     CenterAlignedTopAppBar(
@@ -51,23 +61,26 @@ fun MyAppBar(drawerState: DrawerState, scope: CoroutineScope, visible : MutableS
                 DropdownMenuItem(
                     text = { Text(text = "공유하기") },
                     onClick = {
-                        visible.value = !visible.value
+                        openContentsDialog.value = true
                         isDropDownMenuExpanded.value = false
                     }
                 )
                 DropdownMenuItem(
                     text = { Text(text = "친구추가 하기") },
                     onClick = {
-                        opendialog.value = true
+                        openFriendDialog.value = true
                         isDropDownMenuExpanded.value = false
                     }
                 )
             }
         }
     )
-    if (opendialog.value) {
-        AddFriendsDialog()
-        { opendialog.value = false }
+    if (openFriendDialog.value) {
+        AddFriendsDialog { openFriendDialog.value = false }
+
+    }
+    if (openContentsDialog.value) {
+        shareContentsDialog(onChange = { openContentsDialog.value = false }, visible = visible)
     }
 
 }
@@ -83,7 +96,7 @@ fun requestFriend(email : String){
 
 @Composable
 fun AddFriendsDialog(onChange: () -> Unit) {
-    var friend = rememberSaveable {
+    val friend = rememberSaveable {
         mutableStateOf("")
     }
     AlertDialog(
@@ -123,8 +136,68 @@ fun AddFriendsDialog(onChange: () -> Unit) {
     )
 }
 
+@Composable
+fun shareContentsDialog(onChange: () -> Unit, visible : MutableState<Boolean>){
+    val isButtonClicked = remember {
+        mutableStateOf(false)
+    }
+    val buttonColor = if(isButtonClicked.value) Color.Blue else Color.Magenta
+
+    AlertDialog(
+        onDismissRequest = { onChange()},
+        title = {
+            Text(
+                text = "공유할 친구를 선택해주세요!",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp
+            )
+        },
+        text = {
+            LazyColumn(){
+                items(FriendData.friends) {
+                    Button(
+                       onClick = {
+                           ShareList.shareList.add(it)
+                           isButtonClicked.value != isButtonClicked.value
+                       }
+                    ){
+                        Text(text = it, textAlign = TextAlign.Center)
+                    }
+
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { visible.value = !visible.value}) {
+                Text(text = "선택완료")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onChange() }) {
+                Text(text = "닫기")
+            }
+        }
+
+    )
+}
+
+object ShareList{
+    val shareList = mutableListOf<String>()
+}
+
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun AddFriendsDialogPreview() {
     AddFriendsDialog { }
+}
+
+
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
+@Composable
+fun shareContentsDialogPreview() {
+    val para = remember {
+        mutableStateOf<Boolean>(true)
+    }
+    shareContentsDialog({},para)
 }
