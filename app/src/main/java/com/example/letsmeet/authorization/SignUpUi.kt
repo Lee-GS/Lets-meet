@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -55,7 +56,7 @@ fun signUp(modifier: Modifier, navController: NavController) {
 
 
     Column(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
