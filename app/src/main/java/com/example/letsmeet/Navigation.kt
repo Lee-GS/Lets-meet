@@ -14,11 +14,12 @@ import com.example.letsmeet.authorization.signUp
 import com.example.letsmeet.mainScreen.MainUi
 
 @Composable
-fun Navigation(navController: NavController){
+fun Navigation(){
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.SignInScreen.route)
+        startDestination = Screen.SignInScreen.route
+    )
     {
         composable(route = Screen.SignInScreen.route){
             signIn(modifier = Modifier.padding(8.dp), navController = navController)

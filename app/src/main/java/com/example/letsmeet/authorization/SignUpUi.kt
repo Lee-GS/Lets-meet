@@ -1,35 +1,26 @@
 package com.example.letsmeet.authorization
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.graphics.drawable.shapes.RoundRectShape
-import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.letsmeet.Screen
@@ -48,31 +39,51 @@ fun signUp(modifier: Modifier, navController: NavController) {
     var name = rememberSaveable {
         mutableStateOf("")
     }
-    var pw_check = rememberSaveable {
+    var pwCheck = rememberSaveable {
         mutableStateOf("")
     }
     var friendList = mutableListOf<String>()
 
 
     Column(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize().background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TextField(value = name.value,
             onValueChange = {nameValue -> name.value = nameValue},
             label = { Text("이름") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = modifier
                 .fillMaxWidth()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
         )
 
         TextField(value = email.value,
             onValueChange = {emailValue -> email.value = emailValue},
             label = { Text("이메일") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             modifier = modifier
                 .fillMaxWidth()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
         )
 
         TextField(value = pw.value,
@@ -80,30 +91,50 @@ fun signUp(modifier: Modifier, navController: NavController) {
             label = { Text("비밀번호") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             modifier = modifier
                 .fillMaxWidth()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
         )
 
-        TextField(value = pw_check.value,
-            onValueChange = {pw_checkValue -> pw_check.value = pw_checkValue},
+        TextField(value = pwCheck.value,
+            onValueChange = {pwCheckValue -> pwCheck.value = pwCheckValue},
             label = { Text("비밀먼호 확인") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = modifier
                 .fillMaxWidth()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
         )
 
-        if(pw.value == pw_check.value && pw.value != "" && pw_check.value != ""){
+        if(pw.value == pwCheck.value && pw.value != "" && pwCheck.value != ""){
             Text(text = "비밀번호가 일치합니다", color = Color.Blue)
         }
-        else if(pw.value != pw_check.value && pw.value != "" && pw_check.value != ""){
+        else if(pw.value != pwCheck.value && pw.value != "" && pwCheck.value != ""){
             Text(text = "비밀번호가 일치하지 않습니다.", color = Color.Red)
         }
         var userDTO = UserDTO(name.value,email.value,pw.value,friendList)
 
         Button(
             onClick = {
-            if (pw.value == pw_check.value){
+            if (pw.value == pwCheck.value){
                 register(email.value,pw.value,navController,context)
                 firestore.collection("users").document(email.value).set(userDTO)
                 } },

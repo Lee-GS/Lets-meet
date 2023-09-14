@@ -7,7 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,63 +37,100 @@ import com.example.letsmeet.authorization.ui.theme.LetsMeetTheme
 import com.example.letsmeet.navigationDrawer.addFriend
 
 @Composable
-fun signIn(modifier: Modifier,navController: NavController) {
+fun signIn(modifier: Modifier, navController: NavController) {
     val context = LocalContext.current
-    var email = rememberSaveable{
+    var email = rememberSaveable {
         mutableStateOf("")
     }
     var pw = rememberSaveable {
         mutableStateOf("")
     }
     Column(
-        Modifier.fillMaxSize(),
+        Modifier
+            .fillMaxSize()
+            .background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextField(value = email.value,
-            onValueChange = {emailValue -> email.value = emailValue},
+        TextField(
+            value = email.value,
+            onValueChange = { emailValue -> email.value = emailValue },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            label = {Text("Email")},
+            label = { Text("Email") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             modifier = modifier
-                .fillMaxWidth()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
         )
-        TextField(value = pw.value,
-            onValueChange = {pwValue -> pw.value = pwValue},
+        TextField(
+            value = pw.value,
+            onValueChange = { pwValue -> pw.value = pwValue },
             label = { Text("PW") },
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.White,
+                disabledIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledLabelColor = Color.Transparent
+            ),
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = modifier
-                .fillMaxWidth()
-                .imePadding()
+                .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(15.dp)
 
         )
-        Button(onClick = { if(email.value != "" && pw.value !=" ") login(email.value,pw.value,context,navController) },
-            modifier = modifier.fillMaxWidth()) {
+        Button(
+            onClick = {
+                if (email.value != "" && pw.value != " ") login(
+                    email.value,
+                    pw.value,
+                    context,
+                    navController
+                )
+            },
+            modifier = modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2D64D8)
+            )
+        ) {
             Text(text = "로그인")
 
         }
-        Button(onClick = { navController.navigate(route = Screen.SignUpScreen.route)},
-            modifier = modifier.fillMaxWidth()
+        Button(
+            onClick = { navController.navigate(route = Screen.SignUpScreen.route) },
+            modifier = modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2D64D8)
+            )
         ) {
             Text(text = "회원가입")
         }
     }
 }
 
-fun login(email: String, password: String, context: Context,navController: NavController){
+fun login(email: String, password: String, context: Context, navController: NavController) {
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { it ->
-            if(it.isSuccessful){
-                if (checkAuth()){
-                    AuthFireBase.email=email
-                    Toast.makeText(context,"로그인 되었습니다!",Toast.LENGTH_SHORT).show()
-                    Log.d("현재 유저:","${AuthFireBase.email}")
-                    navController.navigate(Screen.MainScreen.route){
-                        popUpTo("signin_screen"){inclusive = true}
+            if (it.isSuccessful) {
+                if (checkAuth()) {
+                    AuthFireBase.email = email
+                    Toast.makeText(context, "로그인 되었습니다!", Toast.LENGTH_SHORT).show()
+                    Log.d("현재 유저:", "${AuthFireBase.email}")
+                    navController.navigate(Screen.MainScreen.route) {
+                        popUpTo("signin_screen") { inclusive = true }
                     }
                 }
-            }else{
-                Toast.makeText(context,"로그인 실패",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "로그인 실패", Toast.LENGTH_SHORT).show()
             }
         }
 }

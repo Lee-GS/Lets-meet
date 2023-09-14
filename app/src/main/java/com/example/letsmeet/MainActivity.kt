@@ -28,8 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LetsMeetTheme {
-                val navController : NavHostController = rememberNavController()
-                Navigation(navController = navController)
+                Navigation()
             }
         }
         instance = this
